@@ -6,7 +6,7 @@ We intend to create a program that visualizes exercise data and suggests new rou
 
 * Good Routes - Our team has defined a good route as a non-overlapping path that starts and stops at the same point and is unlike the last route taken by a given user.
 * OpenStreetMap - OpenStreetMap contains a plethora of open source map data, and we will use it to help construct our map visual and potentially to determine viable routes. We will likely overlay the routes we come up with on OpenStreetMap.
-* GMPlot - As an alternative to OpenStreetMap, we have considered using Google Maps Plot to display our data ontop of a map of that area. This will help us verify if our new route suggestion is suggesting valid paths. If we have extra time, we may do something else and create a novel way to visualize our data.
+* GMPlot - As an alternative to OpenStreetMap, we have considered using Google Maps Plot to display our data on top of a map of that area. This will help us verify if our new route suggestion is suggesting valid paths. If we have extra time, we may do something else and create a novel way to visualize our data.
 * Strava - To create a database of existing running paths, we will collect data from Strava. This will likely involve a fair bit of scraping once we have accessed all of the data available through the Strava API. (Stava is a popular app where users upload and share their GPS tracked, running and cycling activities.)
 
 # Key Questions:
