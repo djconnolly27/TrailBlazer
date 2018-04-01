@@ -2,6 +2,8 @@
 
 We intend to create a program that visualizes exercise data and suggests new routes for the future. In our program, a user will be able to input data through a GPS enabled device to track their runs. We will also build a database of routes by scraping websites like Strava and compiling those routes into maps. Our algorithm will then use that data to suggest new routes that are a user's specified length.
 
+![alt text] (Final Project UML.png)
+
 # Background Information:
 
 * Good Routes - Our team has defined a good route as a non-overlapping path that starts and stops at the same point and is unlike the last route taken by a given user.
