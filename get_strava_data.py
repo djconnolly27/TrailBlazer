@@ -4,7 +4,7 @@ import polyline
 import random
 from gmplot import gmplot
 
-#In the terminal, run "export TOKEN=(insert_your_api_key)"
+#In the terminal, run "export TOKEN=(insert_your_strava_api_key)"
 token = os.environ["TOKEN"]
 headers = {'Authorization': "Bearer {0}".format(token)}
 segments = requests.get("https://www.strava.com/api/v3/athlete/activities?page={0}".format(1), headers = headers)
