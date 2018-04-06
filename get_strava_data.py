@@ -9,4 +9,7 @@ seg_json = segments.json()
 
 print(seg_json)
 for segment in seg_json:
-    print(polyline.decode(segment['map']['summary_polyline']))
+    encoded_coords = segment['map']['summary_polyline']
+    if encoded_coords != None:
+        #print(encoded_coords)
+        print(polyline.decode(encoded_coords))
