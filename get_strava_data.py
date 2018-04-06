@@ -30,13 +30,11 @@ def find_center(single_run):
 
 
 # Place map
-gmap = gmplot.GoogleMapPlotter(find_center(paths[0])[0], find_center(paths[0])[1], 13)
+gmap = gmplot.GoogleMapPlotter(find_center(paths[0])[0], find_center(paths[0])[1], 10)
 
-area_lats, area_lngs = zip(*paths[0])
-
-gmap.plot(area_lats, area_lngs, 'cornflowerblue', edge_width=10)
-
-
+for path in paths:
+    area_lats, area_lngs = zip(*path)
+    gmap.plot(area_lats, area_lngs, 'cornflowerblue', edge_width=10)
 
 # Draw
-gmap.draw("my_map.html")
+gmap.draw("templates/my_map.html")
