@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+    body {
+      background-color: lightblue;
+    }
+
+    h1 {
+      color: black;
+      background-color: lightgreen;
+      border: 1px solid black;
+      text-align: center;
+    }
+
+    p {
+      color: black;
+    }
+
+    .center {
+      margin: auto;
+      width: 70%;
+      border: 5px solid purple;
+      padding: 10px;
+    }
+
+    </style>
+    <title>
+      Route Suggestion
+    </title>
+    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='style4.css') }}"> -->
+  </head>
+  <body>
+    <h1>Welcome to our Route Suggestion Web App!</h1>
+    <p>We are writing software to help generate and visualize new routes for runners, walkers, and bikers. We are creating this for our Software Design final project.</p>
+    <center>Please login to view your routes:</center>
+    <div class="center">
+      <!-- <p>Please login:</p> -->
+      <!-- <link rel="import" href="my_map.html"> -->
+      <!-- <iframe src="/templates/my_map.html"></iframe> -->
+      <center>
+      <form action="/login" target="_blank" method="POST">
+        First Name:<br>
+        <input type="text" name="firstname"><br>
+        Last Name:<br>
+        <input type="text" name="lastname"><br>
+        Email: (Please make up an email address at this time)<br>
+        <input type="text" name="email"><br>
+        Username:<br>
+        <input type="text" name="username"><br>
+        Password: (Please use 1234 at this time)<br>
+        <input type="text" name="password"><br><br>
+        <input type="submit" value="Submit">
+      </form>
+    </center>
+    </div>
+  </body>
+</html>
