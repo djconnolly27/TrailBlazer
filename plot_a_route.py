@@ -10,6 +10,7 @@ GMAPS_BASE_DIRECTIONS_URL = "https://maps.googleapis.com/maps/api/directions/jso
 SNAP_TO_ROADS_URL = "https://roads.googleapis.com/v1/snapToRoads"
 
 DIRECTIONS_API_KEY = os.environ["DIRECTIONS_KEY"]
+GEOCODING_API_KEY = os.environ['GEOCODING_KEY']
 
 def get_json(url):
     """Given a properly formatted URL for a JSON web API request, return
@@ -63,12 +64,16 @@ def get_lat_long(place_name):
     See https://developers.google.com/maps/documentation/geocoding/
     for Google Maps Geocode API URL formatting requirements.
     """
-    d = {'address': place_name}
+    d = {'address': place_name, 'key': GEOCODING_API_KEY}
     encoded = urllib.parse.urlencode(d)
     url = GMAPS_BASE_URL + '?' + encoded
     response_data = get_json(url)
-    lat =response_data["results"][0]['geometry']['location']['lat']
-    lng =response_data["results"][0]['geometry']['location']['lng']
+    #print(response_data)
+    #print(response_data['results'][0]['geometry']['location'])
+    coords = response_data["results"][0]['geometry']['location']
+    #print(coords)
+    lat = coords['lat']
+    lng = coords['lng']
     return lat, lng
 
 #print(get_directions(42.280130, -71.271371, 42.280267, -71.234833))
@@ -166,6 +171,20 @@ def get_a_route(place_name, distance):
     #print(center)
     return route
 
+
+def run(place, distance):
+    place = str(place)
+    distance = float(distance)
+    the_route = get_a_route(place, distance)
+    center = find_center(the_route)
+    gmap = gmplot.GoogleMapPlotter(center[0], center[1], 10)
+
+    path_lats, path_lngs = zip(*the_route)
+    gmap.plot(path_lats, path_lngs, 'cornflowerblue', edge_width=10)
+
+    # Draw
+    gmap.draw("templates/my_map.html")
+
 # print(get_lat_long('Olin College'))
 # init_coords = (init_lat, init_lng) = get_lat_long('Olin College')
 # print(init_lat)
@@ -178,13 +197,18 @@ def get_a_route(place_name, distance):
 # dest_address = get_nearest_address(destination[0], destination[1])
 # print(dest_address)
 # get_directions((init_lat), (init_lng), (dest_address[0]), (dest_address[1]))
-# Place map
-the_route = get_a_route('Olin College', 10)
-center = find_center(the_route)
-gmap = gmplot.GoogleMapPlotter(center[0], center[1], 10)
+# # Place map
+if __name__ == "__main__":
+    place = input("Enter a place to start: ")
+    place = str(place)
+    distance = input("Enter a distance: ")
+    distance = float(distance)
+    the_route = get_a_route(place, distance)
+    center = find_center(the_route)
+    gmap = gmplot.GoogleMapPlotter(center[0], center[1], 10)
 
-path_lats, path_lngs = zip(*the_route)
-gmap.plot(path_lats, path_lngs, 'cornflowerblue', edge_width=10)
+    path_lats, path_lngs = zip(*the_route)
+    gmap.plot(path_lats, path_lngs, 'cornflowerblue', edge_width=10)
 
-# Draw
-gmap.draw("templates/my_map.html")
+    # Draw
+    gmap.draw("templates/my_map.html")
