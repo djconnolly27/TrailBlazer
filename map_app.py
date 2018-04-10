@@ -5,6 +5,7 @@ Put your Flask app code here.
 from flask import Flask
 from flask import render_template
 from flask import request
+import plot_a_route
 app = Flask(__name__)
 
 @app.route('/')
@@ -25,7 +26,7 @@ def valid_login(firstname, lastname, email, username, password):
     return True
 
 def log_the_user_in(firstname, lastname):
-    return render_template('my_map.html', firstname=firstname, lastname=lastname)
+    return render_template('profile.html', firstname=firstname, lastname=lastname)
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -47,6 +48,10 @@ def login():
             error = 'Missing required information'
     return render_template('error.html', error=error)
 
+@app.route('/makemap', methods=['POST', 'GET'])
+def make_map():
+    plot_a_route.run(request.form['start'], request.form['distance'])
+    return render_template('my_map.html')
 
 if __name__ == '__main__':
     app.run()
