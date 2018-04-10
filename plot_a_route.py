@@ -155,6 +155,7 @@ def find_center(single_run):
     center = (total_lats/counter, total_lngs/counter)
     return(center)
 
+#gets a random route that is a given distance starting from a given location
 def get_a_route(place_name, distance):
     init_coords = (init_lat, init_lng) = get_lat_long(place_name)
     destination = get_a_random_desination(init_lat, init_lng, distance, 8)
