@@ -4,7 +4,11 @@ Final Project Trail Finding App
 
 Install GMPlot - https://github.com/vgm64/gmplot 
 
-OpenStreetMap - https://www.openstreetmap.org/about
+Flask - run the following in the command line: conda install Flask
+
+Geopy - run the following in the command line: pip install geopy
+
+Currently, you will need a Google Maps Directions API key as well as a Google Maps Geocoding API key in order to run our program.
 
 Published Feedback Form  - https://goo.gl/forms/dkYFP9qiG7RTSUcu2
 
