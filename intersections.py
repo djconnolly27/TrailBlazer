@@ -1,33 +1,13 @@
-import overpy
+'''
+Software Design Final Project: Trail Blazer
 
+Intersections.py takes a bounding area, finds all of the paths in that area, and designates the parts of those paths as nodes and edges.
+'''
+import overpy
 import geopy
 from geopy.distance import VincentyDistance, vincenty
 
-def find_new_lat_lng_geopy(lat, lng, b, dist): #b in degrees (0 is north, 90 is east), dist=distance in kilometers
-    origin = geopy.Point(lat, lng)
-    destination = VincentyDistance(kilometers=dist).destination(origin, b)
-    return (destination.latitude, destination.longitude)
-
-def get_bounding_box(lat, lng, dist):
-    bearing = 0
-    bearing_increase = 360/4
-    points_on_circumference = []
-    for i in range(4):
-        points_on_circumference.append(find_new_lat_lng_geopy(lat, lng, bearing, dist))
-        bearing += bearing_increase
-    return points_on_circumference
-
-end_locations = get_bounding_box(42.29295,-71.26304, 3)
-
-# point1 = 42.293015, -71.260973
-# point2 = 42.292158, -71.260845
-# print(vincenty((42.293015, -71.260973), (42.292158, -71.260845)).km)
-
-# for coord in get_bounding_box
-#print(get_bounding_box(42.29295,-71.26304, 3))
 api = overpy.Overpass()
-
-
 
 # fetch all ways and nodes
 result = api.query("""
@@ -36,53 +16,41 @@ result = api.query("""
     out body;
     """)
 
+# Gets all of the valid nodes/points that are on roads or paths.
 all_nodes = {}
-intersections = []
-
 for way in result.ways:
-    #print("Name: %s" % way.tags.get("name", "n/a"))
-    #print("  Highway: %s" % way.tags.get("highway", "n/a"))
-    #print("  Nodes:")
     for node in way.nodes:
         all_nodes[node] = all_nodes.get(node, 0) + 1
-        #if node.id == 68312720:
-            #print(node)
-        #    print("Name: %s" % way.tags.get("name", "n/a"))
-        #    print("  Highway: %s" % way.tags.get("highway", "n/a"))
-        #    print("    Lat: %f, Lon: %f" % (node.lat, node.lon))
 
+# Creates a list of the points that are intersections.
+intersections = []
 for node in all_nodes:
     if all_nodes[node] > 1:
         intersections.append(node)
-        #print("Lat: %f, Lon: %f" % (node.lat, node.lon))
 
-# ways_and_intersections = {}
-# for way in result.ways:
-#     for node in way.nodes:
-#         if node in intersections:
-#         #for node in intersections:
-#         #if node in way.nodes:
-#             if way in ways_and_intersections:
-#                 ways_and_intersections[way].append(node)
-#             else:
-#                 ways_and_intersections[way] = [node]
 
 class Edge():
+    ''' Defines edges, which are the parts of roads or paths that connect the nodes (intersections) to one another. An edge contains a start node, an end node, a list of points, and a length. '''
 
     def __init__(self):
+        ''' Initializes the edge with an empty list of points and a length of zero '''
         self.node_list = []
         self.length = 0
 
     def set_start_node(self, start_node):
+        ''' Defines the first end node of an edge '''
         self.start = start_node
 
     def set_end_node(self, end_node):
+        ''' Defines the second end node of an edge '''
         self.end = end_node
 
     def add_node(self, node):
+        ''' Adds a point to the list of points that comprise the edge '''
         self.node_list.append(node)
 
     def update_distance(self):
+        ''' Updates the length of the edge '''
         if len(self.node_list) > 0:
             first_coord = (self.start.lat, self.start.lon)
             last_coord = (self.end.lat, self.end.lon)
@@ -92,57 +60,64 @@ class Edge():
                 self.length += vincenty((self.node_list[i+1].lat, self.node_list[i+1].lon), (self.node_list[i].lat, self.node_list[i].lon)).km
 
 
-#find edges
-edge_list = []
-neighboring_nodes = {}
+def find_nodes_and_edges():
+    ''' Taking all of the paths/roads in the given area, this breaks up those paths/roads into nodes and edges, which it stores in a dictionary and list, respectively. '''
+    edge_list = []
+    neighboring_nodes = {}
+    for way in result.ways:
+        new_edge = Edge()
+        for node in way.nodes:
+            length = 0
 
-for way in result.ways:
-    new_edge = Edge()
-    for node in way.nodes:
-        length = 0
-        if not hasattr(new_edge, 'start') and new_edge.node_list == []:
-            new_edge.set_start_node(node)
-        elif node not in intersections:
-            new_edge.add_node(node)
-        else:
-            new_edge.set_end_node(node)
-            new_edge.update_distance()
-            edge_list.append(new_edge)
-            if new_edge.start in neighboring_nodes and new_edge.end in neighboring_nodes:
-                neighboring_nodes[new_edge.start].append((new_edge.end, new_edge.length))
-                neighboring_nodes[new_edge.end].append((new_edge.start, new_edge.length))
-            elif new_edge.start in neighboring_nodes:
-                neighboring_nodes[new_edge.start].append((new_edge.end, new_edge.length))
-                neighboring_nodes[new_edge.end] = [(new_edge.start, new_edge.length)]
-            elif new_edge.end in neighboring_nodes:
-                neighboring_nodes[new_edge.end].append((new_edge.start, new_edge.length))
-                neighboring_nodes[new_edge.start] = [(new_edge.end, new_edge.length)]
+            #The following breaks the 'ways,' which represent paths/roads, up into edges, which contain only the section of the path/road between two intersections.
+            if not hasattr(new_edge, 'start') and new_edge.node_list == []:
+                new_edge.set_start_node(node)
+            elif node not in intersections:
+                new_edge.add_node(node)
             else:
-                neighboring_nodes[new_edge.start] = [(new_edge.end, new_edge.length)]
-                neighboring_nodes[new_edge.end] = [(new_edge.start, new_edge.length)]
-            new_edge = Edge()
+                new_edge.set_end_node(node)
+                new_edge.update_distance()
+                edge_list.append(new_edge)
 
-# for node in neighboring_nodes:
-#     print(node, neighboring_nodes[node])
-#     print()
+                # The following section determines which nodes neighbor one another and how far each neighboring node is from the origin node.
+                if new_edge.start in neighboring_nodes and new_edge.end in neighboring_nodes:
+                    neighboring_nodes[new_edge.start].append((new_edge.end, new_edge.length))
+                    neighboring_nodes[new_edge.end].append((new_edge.start, new_edge.length))
+                elif new_edge.start in neighboring_nodes:
+                    neighboring_nodes[new_edge.start].append((new_edge.end, new_edge.length))
+                    neighboring_nodes[new_edge.end] = [(new_edge.start, new_edge.length)]
+                elif new_edge.end in neighboring_nodes:
+                    neighboring_nodes[new_edge.end].append((new_edge.start, new_edge.length))
+                    neighboring_nodes[new_edge.start] = [(new_edge.end, new_edge.length)]
+                else:
+                    neighboring_nodes[new_edge.start] = [(new_edge.end, new_edge.length)]
+                    neighboring_nodes[new_edge.end] = [(new_edge.start, new_edge.length)]
+
+                new_edge = Edge()
+    return edge_list, neighboring_nodes
+
+edge_list, neighboring_nodes = find_nodes_and_edges()
 
 class Node():
+    ''' Defines a node, which represents an intersection of two paths/roads. A node contains information regarding its neighboring nodes and how far each neighbor is from the origin node. '''
 
     def __init__(self, node):
+        ''' Initializes a node with itself and an empty list of neighbors. '''
         self.node = node
         self.neighbors = []
 
     def add_neighbors(self, nodes):
+        ''' Adds all of a nodes neighbors and their respective distances from the origin node to a list of tuples. '''
         self.neighbors.extend(nodes)
 
+# Creates a list of Nodes.
 node_list = []
-
 for node in neighboring_nodes:
     new_node = Node(node)
     new_node.add_neighbors(neighboring_nodes[node])
     node_list.append(new_node)
-#
-for node in node_list:
-    print(node.node)
-    print(node.neighbors)
-    print()
+
+# for node in node_list:
+#     print(node.node)
+#     print(node.neighbors)
+#     print()
