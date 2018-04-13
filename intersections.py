@@ -109,17 +109,17 @@ for way in result.ways:
             new_edge.update_distance()
             edge_list.append(new_edge)
             if new_edge.start in neighboring_nodes and new_edge.end in neighboring_nodes:
-                neighboring_nodes[new_edge.start].append(new_edge.end)
-                neighboring_nodes[new_edge.end].append(new_edge.start)
+                neighboring_nodes[new_edge.start].append((new_edge.end, new_edge.length))
+                neighboring_nodes[new_edge.end].append((new_edge.start, new_edge.length))
             elif new_edge.start in neighboring_nodes:
-                neighboring_nodes[new_edge.start].append(new_edge.end)
-                neighboring_nodes[new_edge.end] = [new_edge.start]
+                neighboring_nodes[new_edge.start].append((new_edge.end, new_edge.length))
+                neighboring_nodes[new_edge.end] = [(new_edge.start, new_edge.length)]
             elif new_edge.end in neighboring_nodes:
-                neighboring_nodes[new_edge.end].append(new_edge.start)
-                neighboring_nodes[new_edge.start] = [new_edge.end]
+                neighboring_nodes[new_edge.end].append((new_edge.start, new_edge.length))
+                neighboring_nodes[new_edge.start] = [(new_edge.end, new_edge.length)]
             else:
-                neighboring_nodes[new_edge.start] = [new_edge.end]
-                neighboring_nodes[new_edge.end] = [new_edge.start]
+                neighboring_nodes[new_edge.start] = [(new_edge.end, new_edge.length)]
+                neighboring_nodes[new_edge.end] = [(new_edge.start, new_edge.length)]
             new_edge = Edge()
 
 # for node in neighboring_nodes:
@@ -132,7 +132,17 @@ class Node():
         self.node = node
         self.neighbors = []
 
-    def add_neighbors(self, node, distance):
-        self.neighbors.append((node, distance))
+    def add_neighbors(self, nodes):
+        self.neighbors.extend(nodes)
 
-start_end_nodes = []
+node_list = []
+
+for node in neighboring_nodes:
+    new_node = Node(node)
+    new_node.add_neighbors(neighboring_nodes[node])
+    node_list.append(new_node)
+#
+for node in node_list:
+    print(node.node)
+    print(node.neighbors)
+    print()
