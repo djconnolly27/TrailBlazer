@@ -1,6 +1,12 @@
-# trail_blazer
-Final Project Trail Finding App
+# Trail Blazer
+Final Project Route Finding App
+By Daniel Connolly, Raquel Dunoff, and Lydia Hodges
 
+### Description
+Trail Blazer will help generate and visualize new routes for runners, walkers, and bikers. We are creating this for our Software Design final project.
+
+### Modules
+To run our program, please install the following modules:
 
 Install GMPlot - https://github.com/vgm64/gmplot 
 
@@ -16,6 +22,5 @@ Weather API - run the following in the command line: pip install weather-api
 
 Currently, you will need a Google Maps Directions API key as well as a Google Maps Geocoding API key in order to run our program.
 
-Published Feedback Form  - https://goo.gl/forms/dkYFP9qiG7RTSUcu2
-
-Spreadsheet of form results - https://docs.google.com/spreadsheets/d/1FAg5R8tZ-ziZQAdxUzqo2QelaVT8yzz0I_zH4vOsmRM/edit?usp=sharing
+### Running the Program
+Our code is broken up into several different files at the moment, including intersections.py, plot_a_route.py, weather_app.py, and map_app.py. Map_app.py will run plot_a_route.py as a module, but the other files run independently of one another at the moment.
