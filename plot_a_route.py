@@ -52,10 +52,20 @@ def get_directions(lat1, lng1, lat2, lng2):
     encoded = urllib.parse.urlencode(d)
     url = GMAPS_BASE_DIRECTIONS_URL + '?' + encoded
     response_data = get_json(url)
+    return response_data
+
+def get_total_distance(response_data):
+    total_distance = response_data["routes"][0]["legs"][0]["distance"]["text"]
+    return total_distance
+
+def get_decoded_polyline(response_data):
     encoded_polyline = response_data["routes"][0]["overview_polyline"]["points"]
     decoded = polyline.decode(encoded_polyline)
     return decoded
 
+def miles_to_km(miles):
+    one_mile_in_km = 1.609344
+    return miles * one_mile_in_km
 
 def get_lat_long(place_name):
     """Given a place name or address, return a (latitude, longitude) tuple
@@ -141,7 +151,7 @@ def get_a_random_desination(lat, lng, dist, num_points):
     bearing = 0
     bearing_increase = 360/num_points
     points_on_circumference = []
-    for i in range(num_points - 1):
+    for i in range(num_points):
         points_on_circumference.append(find_new_lat_lng_geopy(lat, lng, bearing, dist))
         bearing += bearing_increase
     return random.choice(points_on_circumference)
@@ -165,11 +175,13 @@ def get_a_route(place_name, distance):
     init_coords = (init_lat, init_lng) = get_lat_long(place_name)
     destination = get_a_random_desination(init_lat, init_lng, distance, 8)
     dest_address = get_nearest_address(destination[0], destination[1])
-    route = get_directions(init_lat, init_lng, dest_address[0], dest_address[1])
+    directions = get_directions(init_lat, init_lng, dest_address[0], dest_address[1])
+    route = get_decoded_polyline(directions)
+    distance = get_total_distance(directions)
     #print(route)
     #center = find_center(route)
     #print(center)
-    return route
+    return route, distance
 
 
 def run(place, distance):
@@ -199,12 +211,16 @@ def run(place, distance):
 # get_directions((init_lat), (init_lng), (dest_address[0]), (dest_address[1]))
 # # Place map
 if __name__ == "__main__":
-    place = input("Enter a place to start: ")
-    place = str(place)
-    distance = input("Enter a distance: ")
-    distance = float(distance)
-    the_route = get_a_route(place, distance)
+    #place = input("Enter a place to start: ")
+    #place = str(place)
+    #distance = input("Enter a distance: ")
+    #distance = float(distance)
+    place = 'Olin College'
+    distance = 50
+    route_info = get_a_route(place, distance)
+    the_route = route_info[0]
     center = find_center(the_route)
+    print(route_info[1])
     gmap = gmplot.GoogleMapPlotter(center[0], center[1], 10)
 
     path_lats, path_lngs = zip(*the_route)
