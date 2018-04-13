@@ -91,23 +91,14 @@ class Edge():
             for i in range(len(self.node_list) - 1):
                 self.length += vincenty((self.node_list[i+1].lat, self.node_list[i+1].lon), (self.node_list[i].lat, self.node_list[i].lon)).km
 
-# for node in all_nodes:
-#     print(node.lat, node.lon)
-
 
 #find edges
 edge_list = []
-# for i in range(10):
-#     edge_list.append(Edge())
-# print(edge_list)
+neighboring_nodes = {}
+
 for way in result.ways:
     new_edge = Edge()
-    #print(way.nodes[0])
-    #for i in range(way.nodes):
-    #i = 0
-    #while i < len(way.nodes):
     for node in way.nodes:
-        #new_edge.set_start_node(node)
         length = 0
         if not hasattr(new_edge, 'start') and new_edge.node_list == []:
             new_edge.set_start_node(node)
@@ -117,38 +108,31 @@ for way in result.ways:
             new_edge.set_end_node(node)
             new_edge.update_distance()
             edge_list.append(new_edge)
+            if new_edge.start in neighboring_nodes and new_edge.end in neighboring_nodes:
+                neighboring_nodes[new_edge.start].append(new_edge.end)
+                neighboring_nodes[new_edge.end].append(new_edge.start)
+            elif new_edge.start in neighboring_nodes:
+                neighboring_nodes[new_edge.start].append(new_edge.end)
+                neighboring_nodes[new_edge.end] = [new_edge.start]
+            elif new_edge.end in neighboring_nodes:
+                neighboring_nodes[new_edge.end].append(new_edge.start)
+                neighboring_nodes[new_edge.start] = [new_edge.end]
+            else:
+                neighboring_nodes[new_edge.start] = [new_edge.end]
+                neighboring_nodes[new_edge.end] = [new_edge.start]
             new_edge = Edge()
-            #new_edge.
-            #new_edge.node_list == [] and
-        # elif new_edge.node_list == [] and :
-        #     new_edge.node_list.append(node)
-        # else
-    # if hasattr(new_edge, 'start'):
-    # edge_list.append(new_edge)
 
-# class Node():
-#
-#     def __init__(self):
-#         self.neighbors = []
-#
-#     def add_neighbors(self, node, distance):
-#         self.neighbors.append((node, distance))
+# for node in neighboring_nodes:
+#     print(node, neighboring_nodes[node])
+#     print()
 
-# for edge in edge_list
-# for edge in edge_list:
-#     print(edge.start, edge.end, edge.length)
-#print(edge_list)
-#
-#         if node in intersections:
+class Node():
 
+    def __init__(self, node):
+        self.node = node
+        self.neighbors = []
 
-# for way in ways_and_intersections:
-#     for node in way.nodes:
-#         if
-#         print(node.lat)
-    #waypoints = way.nodes
+    def add_neighbors(self, node, distance):
+        self.neighbors.append((node, distance))
 
-
-#print(ways_and_intersections)
-# print(intersections[0], intersections[1])
-# print(result.ways)
+start_end_nodes = []
