@@ -1,7 +1,7 @@
 '''
 Software Design Final Project: Trail Blazer
 
-Intersections.py takes a bounding area, finds all of the paths in that area, and designates the parts of those paths as nodes and edges.
+plot_a_route.py takes a starting location and a distance and finds and plots a route from that starting location to another location an 'as-the-crow-flies' distance from the starting location.
 '''
 
 from urllib.request import urlopen
