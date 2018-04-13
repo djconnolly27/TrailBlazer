@@ -24,3 +24,11 @@ Currently, you will need a Google Maps Directions API key as well as a Google Ma
 
 ### Running the Program
 Our code is broken up into several different files at the moment, including intersections.py, plot_a_route.py, weather_app.py, and map_app.py. Map_app.py will run plot_a_route.py as a module, but the other files run independently of one another at the moment.
+
+You will also need to get a directions API key and geocoding api key from google maps and run the following in the command line:
+export GEOCODING_KEY = your_geocoding_key
+export DIRECTIONS_KEY = your_directions_key
+
+You can obtain a geocoding key from https://developers.google.com/maps/documentation/geocoding/intro
+You can obtain a directions key from https://developers.google.com/maps/documentation/directions/
+
