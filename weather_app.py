@@ -1,7 +1,7 @@
 import plot_a_route as par
 
 
-class weather1:
+class climate:
 
     def __init__(self, percip=0,date=0,temp=0,high=0,low=0):
         from weather import Weather, Unit
@@ -28,5 +28,5 @@ if __name__ == "__main__":
     #place = input("Enter a place to start: ")
     #place = str(place)
     place = "Olin College"
-    weather = weather1(place)
+    weather = climate(place)
     print(weather.date)

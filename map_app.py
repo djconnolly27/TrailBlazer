@@ -6,6 +6,7 @@ from flask import Flask
 from flask import render_template
 from flask import request
 import plot_a_route
+import weather_app
 app = Flask(__name__)
 
 @app.route('/')
@@ -52,6 +53,11 @@ def login():
 def make_map():
     plot_a_route.run(request.form['start'], request.form['distance'])
     return render_template('my_map.html')
+
+@app.route('/weather', methods=['POST', 'GET'])
+def post_weather():
+    #todaysWeather = climate(request.form['place'])
+    return render_template('map_app_weather.html')
 
 if __name__ == '__main__':
     app.run()
