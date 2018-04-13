@@ -1,10 +1,37 @@
 import overpy
 
+import geopy
+from geopy.distance import VincentyDistance, vincenty
+
+def find_new_lat_lng_geopy(lat, lng, b, dist): #b in degrees (0 is north, 90 is east), dist=distance in kilometers
+    origin = geopy.Point(lat, lng)
+    destination = VincentyDistance(kilometers=dist).destination(origin, b)
+    return (destination.latitude, destination.longitude)
+
+def get_bounding_box(lat, lng, dist):
+    bearing = 0
+    bearing_increase = 360/4
+    points_on_circumference = []
+    for i in range(4):
+        points_on_circumference.append(find_new_lat_lng_geopy(lat, lng, bearing, dist))
+        bearing += bearing_increase
+    return points_on_circumference
+
+end_locations = get_bounding_box(42.29295,-71.26304, 3)
+
+# point1 = 42.293015, -71.260973
+# point2 = 42.292158, -71.260845
+# print(vincenty((42.293015, -71.260973), (42.292158, -71.260845)).km)
+
+# for coord in get_bounding_box
+#print(get_bounding_box(42.29295,-71.26304, 3))
 api = overpy.Overpass()
+
+
 
 # fetch all ways and nodes
 result = api.query("""
-    way(42.270198, -71.279754, 42.301566, -71.224651) ["highway"];
+    way(42.288761, -71.244837, 42.291047, -71.241189) ["highway"];
     (._;>;);
     out body;
     """)
@@ -44,6 +71,7 @@ class Edge():
 
     def __init__(self):
         self.node_list = []
+        self.length = 0
 
     def set_start_node(self, start_node):
         self.start = start_node
@@ -53,6 +81,19 @@ class Edge():
 
     def add_node(self, node):
         self.node_list.append(node)
+
+    def update_distance(self):
+        if len(self.node_list) > 0:
+            first_coord = (self.start.lat, self.start.lon)
+            last_coord = (self.end.lat, self.end.lon)
+            self.length += vincenty((self.node_list[0].lat, self.node_list[0].lon), first_coord).km
+            self.length += vincenty((self.node_list[-1].lat, self.node_list[-1].lon), last_coord).km
+            for i in range(len(self.node_list) - 1):
+                self.length += vincenty((self.node_list[i+1].lat, self.node_list[i+1].lon), (self.node_list[i].lat, self.node_list[i].lon)).km
+
+# for node in all_nodes:
+#     print(node.lat, node.lon)
+
 
 #find edges
 edge_list = []
@@ -67,12 +108,14 @@ for way in result.ways:
     #while i < len(way.nodes):
     for node in way.nodes:
         #new_edge.set_start_node(node)
+        length = 0
         if not hasattr(new_edge, 'start') and new_edge.node_list == []:
             new_edge.set_start_node(node)
         elif node not in intersections:
             new_edge.add_node(node)
         else:
             new_edge.set_end_node(node)
+            new_edge.update_distance()
             edge_list.append(new_edge)
             new_edge = Edge()
             #new_edge.
@@ -83,8 +126,17 @@ for way in result.ways:
     # if hasattr(new_edge, 'start'):
     # edge_list.append(new_edge)
 
-for edge in edge_list:
-    print(edge.end)
+# class Node():
+#
+#     def __init__(self):
+#         self.neighbors = []
+#
+#     def add_neighbors(self, node, distance):
+#         self.neighbors.append((node, distance))
+
+# for edge in edge_list
+# for edge in edge_list:
+#     print(edge.start, edge.end, edge.length)
 #print(edge_list)
 #
 #         if node in intersections:
