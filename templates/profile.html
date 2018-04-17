@@ -8,14 +8,16 @@
 <body
   <h1>Hello! Welcome to your profile page!</h1>
   <p>
-    Your name is {{ firstname }} {{ lastname }}.<br>
+    Your name is {{ firstname }} {{ lastname }}.<br> <br>
+
+    <h2> What is the Weather like today? </h2>
     <form action="/weather" target="_blank" method="POST">
       Current Location:<br>
       <input type="text" name="place"><br>
       <input type="submit" value="Submit">
     </form>
 
-
+    <h2> Where will you be running? </h2>
     <form action="/makemap" target="_blank" method="POST">
       Starting Location:<br>
       <input type="text" name="start"><br>
