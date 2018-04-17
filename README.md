@@ -14,6 +14,8 @@ Flask - run the following in the command line: conda install Flask
 
 Geopy - run the following in the command line: pip install geopy
 
+Geographiclib - run the following in the command line: pip install geographiclib
+
 Polyline - run the following in the command line: pip install polyline
 
 Overpy - run the following in the command line: pip install overpy
