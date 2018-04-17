@@ -115,12 +115,12 @@ def get_a_random_desination(lat, lng, dist, num_points):
 
 def find_center(single_run):
     ''' Finds the center of the route by averaging the latitude and longitude coordinates of the route '''
-    total_lats = 0
-    total_lngs = 0
+    total_lats = 0.0
+    total_lngs = 0.0
     counter = 0
     for coord in single_run:
-        total_lats += coord[0]
-        total_lngs += coord[1]
+        total_lats = total_lats + (coord[0])
+        total_lngs = total_lngs + (coord[1])
         counter += 1
     center = (total_lats/counter, total_lngs/counter)
     return(center)

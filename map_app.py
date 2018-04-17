@@ -12,6 +12,25 @@ app = Flask(__name__)
 def home():
     return render_template('home.html')
 
+def findWeather(place):
+    from weather import Weather, Unit
+    weather = Weather(unit=Unit.FAHRENHEIT)
+    # Lookup via location name.
+    location = weather.lookup_by_location(place)
+    return location
+
+def getCondition(location):
+
+    condition = location.condition
+    return condition
+
+def getForcast(location):
+# Get weather forecasts for the upcoming days.
+    forecasts = location.forecast
+    forecast = forecasts[1]
+    return forecast
+
+
 def valid_login(firstname, lastname, email, username, password):
     if firstname == '':
         return False
@@ -53,5 +72,16 @@ def make_map():
     plot_a_route.run(request.form['start'], request.form['distance'])
     return render_template('my_map.html')
 
+@app.route('/weather', methods=['POST', 'GET'])
+def post_weather():
+    location = findWeather(request.form['place'])
+    condition = getCondition(location)
+    forcast = getForcast(location)
+    return render_template('map_app_weather.html',place=request.form['place'],date = condition.date, temp=condition.temp, text = condition.text, high = forcast.high, low=forcast.low)
+
 if __name__ == '__main__':
+    """place = "Olin College"
+    weather = findWeather(place)
+    condition = getCondition(weather)
+    print(condition.date)"""
     app.run()
