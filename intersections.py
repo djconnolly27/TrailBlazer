@@ -8,6 +8,7 @@ import geopy
 from geopy.distance import VincentyDistance, vincenty
 import geographiclib
 from geographiclib.geodesic import Geodesic
+import folium
 
 api = overpy.Overpass()
 
@@ -31,9 +32,11 @@ result = api.query("""
 
 # Gets all of the valid nodes/points that are on roads or paths.
 all_nodes = {}
+all_vertices = []
 for way in result.ways:
     for node in way.nodes:
         all_nodes[node] = all_nodes.get(node, 0) + 1
+        all_vertices.append(node)
 
 # Creates a list of the points that are intersections.
 intersections = []
@@ -75,6 +78,10 @@ class Edge():
             self.length += vincenty((self.node_list[-1].lat, self.node_list[-1].lon), last_coord).km
             for i in range(len(self.node_list) - 1):
                 self.length += vincenty((self.node_list[i+1].lat, self.node_list[i+1].lon), (self.node_list[i].lat, self.node_list[i].lon)).km
+        else:
+            first_coord = (self.start.lat, self.start.lon)
+            last_coord = (self.end.lat, self.end.lon)
+            self.length += vincenty(first_coord, last_coord).km
 
     def get_bearing(self):
         bearing = Geodesic.WGS84.Inverse(self.start.lat, self.start.lon, self.end.lat, self.end.lon)['azi1']
@@ -124,19 +131,6 @@ def get_neighboring_nodes(edge_list):
     neighboring_nodes = {}
     for new_edge in edge_list:
         # The following section determines which nodes neighbor one another and how far each neighboring node is from the origin node.
-        # if new_edge.start in neighboring_nodes and new_edge.end in neighboring_nodes:
-        #     neighboring_nodes[new_edge.start].append((new_edge.end, new_edge.length))
-        #     neighboring_nodes[new_edge.end].append((new_edge.start, new_edge.length))
-        # elif new_edge.start in neighboring_nodes:
-        #     neighboring_nodes[new_edge.start].append((new_edge.end, new_edge.length))
-        #     neighboring_nodes[new_edge.end] = [(new_edge.start, new_edge.length)]
-        # elif new_edge.end in neighboring_nodes:
-        #     neighboring_nodes[new_edge.end].append((new_edge.start, new_edge.length))
-        #     neighboring_nodes[new_edge.start] = [(new_edge.end, new_edge.length)]
-        # else:
-        #     neighboring_nodes[new_edge.start] = [(new_edge.end, new_edge.length)]
-        #     neighboring_nodes[new_edge.end] = [(new_edge.start, new_edge.length)]
-
         if new_edge.start in neighboring_nodes and new_edge.end in neighboring_nodes:
             neighboring_nodes[new_edge.start].append(new_edge.end)
             neighboring_nodes[new_edge.end].append(new_edge.start)
@@ -155,9 +149,19 @@ edge_list = find_nodes_and_edges()
 neighboring_nodes = get_neighboring_nodes(edge_list)
 
 nodes_edges = {}
+all_edges = []
 for edge in edge_list:
     ends = edge.start, edge.end
     nodes_edges[ends] = edge
+    # reverse_edge = Edge()
+    # reverse_edge.set_end_node(edge.start)
+    # reverse_edge.set_start_node(edge.end)
+    # reverse_edge.add_multiple_nodes(edge.node_list[::-1])
+    # reverse_edge.update_distance()
+    # reverse_ends = edge.end, edge.start
+    # nodes_edges[reverse_ends] = reverse_edge
+    # all_edges.append(edge)
+    # all_edges.append(reverse_edge)
 #edge_list, neighboring_nodes, nodes_edges = find_nodes_and_edges()
 
 # for edge in edge_list:
@@ -201,14 +205,9 @@ for node in neighboring_nodes:
 #         print(nodes_edges[x])
 #         print()
 
-combo = my_node, last
-alt_combo = last, my_node
-# the_combo = str(combo)
-# print(str(combo))
-if combo in nodes_edges:
-    print(nodes_edges[combo])
-else:
-    print(nodes_edges[alt_combo])
+# combo = my_node, last
+# if combo in nodes_edges:
+#     print(nodes_edges[combo])
 
 def find_path_one_direction(graph, start, bearing, distance, epsilon=45.0, path=[]):
     path = path + [start]
@@ -219,9 +218,9 @@ def find_path_one_direction(graph, start, bearing, distance, epsilon=45.0, path=
     #print(start)
     #print(graph[start])
     for node in graph[start]:
-        # for other_node in nodes_edges:
-        #     print(other_node)
-        #     print(nodes_edges[other_node].get_bearing())
+        for other_node in nodes_edges:
+            print(other_node)
+            print(nodes_edges[other_node].get_bearing())
         # for edge, start_end in nodes_edges.items():
         #     if start_end[0] == start and start_end[1] == node:
         #         print(edge.get_bearing())
@@ -316,4 +315,27 @@ def merge_sort(array):
 
     return array
 
-print(find_path_one_direction(neighboring_nodes, my_node, 0, 4.0))
+# i = 0
+# for edge in all_edges:
+#     print(edge.start, edge.end)
+#     print(edge.get_bearing())
+#     print()
+#     i += 1
+# print(i)
+
+# print(find_path_one_direction(neighboring_nodes, my_node, 0, 4.0))
+
+import networkx as nx
+G = nx.Graph()
+for vertex in intersections:
+    G.add_node(vertex.id, coord=(vertex.lat, vertex.lon))
+for path in edge_list:
+    G.add_edge(path.start.id, path.end.id, weight=path.length)
+#print(G.__getitem__(530968968))
+cycle = nx.find_cycle(G, 530968968)
+cycle_coords = []
+for i in range(len(cycle)):
+    cycle_coords.append((id_to_node[cycle[i][0]].lat, id_to_node[cycle[i][0]].lon))
+    if cycle[i] == cycle[-1]:
+        cycle_coords.append((id_to_node[cycle[i][1]].lat, id_to_node[cycle[i][1]].lon))
+print(cycle_coords)
