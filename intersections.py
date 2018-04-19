@@ -18,17 +18,11 @@ api = overpy.Overpass()
 #     (._;>;);
 #     out body;
 #     """)
-#best is below
 result = api.query("""
     way(42.267275, -71.330775, 42.338246, -71.198266) ["highway"];
     (._;>;);
     out body;
     """)
-# result = api.query("""
-#     way(42.288927, -71.265765, 42.294356, -71.258298) ["highway"];
-#     (._;>;);
-#     out body;
-#     """)
 # Outside West Hall = overpy.Node id=530968968 lat=42.2929279 lon=-71.2630597
 
 # Gets all of the valid nodes/points that are on roads or paths.
@@ -96,12 +90,9 @@ def find_nodes_and_edges():
     ''' Taking all of the paths/roads in the given area, this breaks up those paths/roads into nodes and edges, which it stores in a dictionary and list, respectively. '''
     edge_list = []
     for way in result.ways:
-        #if way.id == 570834600:
-        #print(way.nodes)
         breakpoints = []
         for i in range(len(way.nodes)):
             if way.nodes[i] in intersections:
-                # if i != 0 and i != (len(way.nodes) - 1):
                 breakpoints.append(i)
         if breakpoints == []:
             new_edge = Edge()
@@ -109,21 +100,18 @@ def find_nodes_and_edges():
             new_edge.set_end_node(way.nodes[-1])
             if len(way.nodes) > 2:
                 new_edge.add_multiple_nodes(way.nodes[1:-1])
-            #print(new_edge.node_list)
             new_edge.update_distance()
             edge_list.append(new_edge)
         else:
             new_ways = []
             for x in range(len(breakpoints) - 1):
                 new_ways.append(way.nodes[breakpoints[x]:breakpoints[x+1] + 1])
-            #print(new_ways)
             for y in new_ways:
                 new_edge = Edge()
                 new_edge.set_start_node(y[0])
                 new_edge.set_end_node(y[-1])
                 if len(y) > 2:
                     new_edge.add_multiple_nodes(y[1:-1])
-                #print(new_edge.node_list)
                 new_edge.update_distance()
                 edge_list.append(new_edge)
     return edge_list
@@ -148,186 +136,11 @@ def get_neighboring_nodes(edge_list):
 
 edge_list = find_nodes_and_edges()
 neighboring_nodes = get_neighboring_nodes(edge_list)
-#print(neighboring_nodes)
 
 nodes_edges = {}
-all_edges = []
 for edge in edge_list:
     ends = edge.start, edge.end
     nodes_edges[ends] = edge
-    reverse_edge = Edge()
-    reverse_edge.set_end_node(edge.start)
-    reverse_edge.set_start_node(edge.end)
-    reverse_edge.add_multiple_nodes(edge.node_list[::-1])
-    reverse_edge.update_distance()
-    reverse_ends = edge.end, edge.start
-    nodes_edges[reverse_ends] = reverse_edge
-    all_edges.append(edge)
-    all_edges.append(reverse_edge)
-#edge_list, neighboring_nodes, nodes_edges = find_nodes_and_edges()
-
-# for edge in edge_list:
-#     print(edge.get_bearing())
-
-class Node():
-    ''' Defines a node, which represents an intersection of two paths/roads. A node contains information regarding its neighboring nodes and how far each neighbor is from the origin node. '''
-
-    def __init__(self, node):
-        ''' Initializes a node with itself and an empty list of neighbors. '''
-        self.node = node
-        self.neighbors = []
-
-    def add_neighbors(self, nodes):
-        ''' Adds all of a nodes neighbors and their respective distances from the origin node to a list of tuples. '''
-        self.neighbors.extend(nodes)
-
-
-# Creates a list of Nodes.
-node_list = []
-for node in neighboring_nodes:
-    new_node = Node(node)
-    new_node.add_neighbors(neighboring_nodes[node])
-    node_list.append(new_node)
-    if node.id == 530968968:
-        my_node = node
-        #print(node.lat, node.lon)
-        #print(neighboring_nodes[node])
-    #elif node.id == 530968968:
-    #    first = node
-    elif node.id == 531000239:
-        last = node
-
-# print(node_list)
-# for node in node_list:
-#     print(node.node)
-#     print(node.neighbors)
-
-# for x in nodes_edges:
-#     if x[0].id == 530968968 or x[1].id == 530968968:
-#         print(x)
-#         print(nodes_edges[x])
-#         print()
-
-# combo = my_node, last
-# if combo in nodes_edges:
-#     print(nodes_edges[combo])
-
-def find_path_one_direction(graph, start, bearing, distance, epsilon=45.0, path=[]):
-    path = path + [start]
-    if distance < 0.25 and distance > -0.25:
-        return path
-    if not start in graph:
-        return None
-    #print(start)
-    #print(graph[start])
-    for node in graph[start]:
-        for other_node in nodes_edges:
-            print(other_node)
-            print(nodes_edges[other_node].get_bearing())
-        # for edge, start_end in nodes_edges.items():
-        #     if start_end[0] == start and start_end[1] == node:
-        #         print(edge.get_bearing())
-        #print(node.id)
-        # for edge in edge_list:
-        #     #print(edge.start)
-        #     #print(edge.end)
-        #     #print(edge.get_bearing())
-        #     if edge.start == start and edge.end == node:
-        #         print('Success')
-        #         my_edge = edge
-        # start_id = start.id
-        # node_id = node.id
-        # val = start_id, node_id
-        #print(nodes_edges[start_id, node_id])
-        if abs(my_edge.get_bearing() - bearing) <= epsilon:
-            if node not in path:
-                new_distance = distance - my_edge.length
-                newpath = find_path_one_direction(graph, node, bearing, new_distance, path)
-                if newpath:
-                    return newpath
-        else:
-            epsilon += 10.0
-            return find_path_one_direction(graph, start, bearing, distance, epsilon, path)
-        # if node not in path:
-        #     newpath = find_path(graph, node, end, path)
-        #     if newpath:
-        #         return newpath
-    return None
-
-def find_path_back(graph, start, end, path=[]):
-    path = path + [start]
-    if start == end:
-        return path
-    if not start in graph:
-        return None
-    for node in graph[start]:
-        if node not in path:
-            newpath = find_path_back(graph, node, end, path)
-            if newpath: return newpath
-    return None
-
-def find_path(graph, start, distance, path=[]):
-    path = path + [start]
-    for i in range(3):
-        new_part = find_path_one_direction(graph, start, i*90.0, distance/4)
-        if new_part != None:
-            path = path + new_part
-            start = new_part[-1]
-    rest_of_path = find_path_back(graph, path[-1], start)
-    if rest_of_path != None:
-        path = path + rest_of_path
-    return path
-
-neighboring_nodes = {}
-nodes_by_id = []
-id_to_node = {}
-for way in result.ways:
-    for node in way.nodes:
-        nodes_by_id.append(node.id)
-        id_to_node[node.id] = node
-
-def merge_sort(array):
-    length = len(array)
-    if length > 1:
-        mp = int(length / 2)
-        left = merge_sort(array[:mp])
-        right = merge_sort(array[mp:])
-        left_len = len(left)
-        right_len = len(right)
-        i = 0
-        j = 0
-        k = 0
-        while i < left_len and j < right_len:
-            if left[i] < right[j]:
-                array[k] = left[i]
-                i += 1
-            else:
-                array[k] = right[j]
-                j += 1
-            k += 1
-
-        while i < left_len:
-            array[k] = left[i]
-            i += 1
-            k += 1
-
-        while j < right_len:
-            array[k] = right[j]
-            j += 1
-            k += 1
-
-    return array
-
-# i = 0
-# for edge in all_edges:
-#     print(edge.start, edge.end)
-#     print(edge.get_bearing())
-#     print()
-#     i += 1
-# print(i)
-
-# print(find_path_one_direction(neighboring_nodes, my_node, 0, 4.0))
-#
 
 import networkx as nx
 import matplotlib.pyplot as plt
