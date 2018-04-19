@@ -18,13 +18,14 @@ api = overpy.Overpass()
 #     (._;>;);
 #     out body;
 #     """)
+#best is below
 result = api.query("""
     way(42.267275, -71.330775, 42.338246, -71.198266) ["highway"];
     (._;>;);
     out body;
     """)
 # result = api.query("""
-#     way(42.292916, -71.263133, 42.292928, -71.263053) ["highway"];
+#     way(42.288927, -71.265765, 42.294356, -71.258298) ["highway"];
 #     (._;>;);
 #     out body;
 #     """)
@@ -147,21 +148,22 @@ def get_neighboring_nodes(edge_list):
 
 edge_list = find_nodes_and_edges()
 neighboring_nodes = get_neighboring_nodes(edge_list)
+#print(neighboring_nodes)
 
 nodes_edges = {}
 all_edges = []
 for edge in edge_list:
     ends = edge.start, edge.end
     nodes_edges[ends] = edge
-    # reverse_edge = Edge()
-    # reverse_edge.set_end_node(edge.start)
-    # reverse_edge.set_start_node(edge.end)
-    # reverse_edge.add_multiple_nodes(edge.node_list[::-1])
-    # reverse_edge.update_distance()
-    # reverse_ends = edge.end, edge.start
-    # nodes_edges[reverse_ends] = reverse_edge
-    # all_edges.append(edge)
-    # all_edges.append(reverse_edge)
+    reverse_edge = Edge()
+    reverse_edge.set_end_node(edge.start)
+    reverse_edge.set_start_node(edge.end)
+    reverse_edge.add_multiple_nodes(edge.node_list[::-1])
+    reverse_edge.update_distance()
+    reverse_ends = edge.end, edge.start
+    nodes_edges[reverse_ends] = reverse_edge
+    all_edges.append(edge)
+    all_edges.append(reverse_edge)
 #edge_list, neighboring_nodes, nodes_edges = find_nodes_and_edges()
 
 # for edge in edge_list:
@@ -188,6 +190,7 @@ for node in neighboring_nodes:
     node_list.append(new_node)
     if node.id == 530968968:
         my_node = node
+        #print(node.lat, node.lon)
         #print(neighboring_nodes[node])
     #elif node.id == 530968968:
     #    first = node
@@ -324,18 +327,27 @@ def merge_sort(array):
 # print(i)
 
 # print(find_path_one_direction(neighboring_nodes, my_node, 0, 4.0))
+#
 
 import networkx as nx
+import matplotlib.pyplot as plt
 G = nx.Graph()
 for vertex in intersections:
-    G.add_node(vertex.id, coord=(vertex.lat, vertex.lon))
+    G.add_node(vertex.id, coord=(float(vertex.lat), float(vertex.lon)))
+count = 0
 for path in edge_list:
+    count += 1
     G.add_edge(path.start.id, path.end.id, weight=path.length)
-#print(G.__getitem__(530968968))
+
 cycle = nx.find_cycle(G, 530968968)
-cycle_coords = []
-for i in range(len(cycle)):
-    cycle_coords.append((id_to_node[cycle[i][0]].lat, id_to_node[cycle[i][0]].lon))
-    if cycle[i] == cycle[-1]:
-        cycle_coords.append((id_to_node[cycle[i][1]].lat, id_to_node[cycle[i][1]].lon))
-print(cycle_coords)
+
+all_cycles=nx.cycle_basis(G)
+for cycle in all_cycles:
+    if 530968968 in cycle:
+        print(cycle)
+
+# G.remove_node(68330106)
+# G.remove_node(1934014646)
+
+# nx.draw(G,nx.get_node_attributes(G, 'coord'),node_size=2)
+# plt.show()
