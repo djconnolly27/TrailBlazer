@@ -3,6 +3,7 @@ Code for the creation and running of the GUI for Trail Blazer.
 """
 
 from tkinter import *
+from AnimatedGif import *
 
 class TrailBlazerGUI:
     def __init__(self, master):
@@ -34,7 +35,13 @@ class TrailBlazerGUI:
                                     activebackground="#bcf5bc", activeforeground="#8b5d2e", command=master.quit)
         self.cancel.grid(row=0, column=1)
 
+        self.gif = AnimatedGif(master, 'images/oregonTrail.gif', 0.5)
+        self.gif.config(background=self.bg)
+        self.gif.pack(side=BOTTOM)
+        self.gif.start()
+
     def login_page(self, event=None):
+        self.gif.stop()
         self.l_page = Toplevel(bg=self.bg)
         self.l_page.geometry("1920x1080")
         if self.e_page!="empty":
@@ -92,6 +99,10 @@ class TrailBlazerGUI:
         self.hello = Label(self.h_page, text="Hello! Welcome to your profile page!", font=("sans serif", 50),
                             bg=self.bg, fg=self.fg, pady=20)
         self.hello.pack()
+
+        self.weather_init = Frame(self.h_page, width=1000, bg=self.bg)
+        self.weather_init.pack()
+
         self.name_is = Label(self.h_page, text="Where would you like to go, %s %s?" % (self.first_in.get(), self.last_in.get()),
                             font=("sans serif", 15), fg=self.fg, bg=self.bg, pady=10)
         self.name_is.pack()
