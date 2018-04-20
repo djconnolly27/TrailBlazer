@@ -8,14 +8,14 @@ Our program also has other features like the day’s weather forecast.
 # Background Information:
 
 * Tkinter - A GUI for the users to interface with our software.
-* Overpy - An API of which we pulled datapoint of run-able paths. 
-* NetworkX - A program that takes our points, finds the shortest paths and greates a graph.
+* Overpy - An API off which we pulled datapoints of run-able paths. 
+* NetworkX - A program that takes our points, finds the shortest paths and creates a graph.
 * Weather API - Returns current weather data from Yahoo Weather. 
 
 # Key Questions:
 
 * What is a good strategy for approaching route finding?
-* How do we chanfe the font in the GUI?
+* How do we change the pixelation of the font in the GUI?
 * Is there a better way to structure our edge class?
 * What is a faster way to run our find_nodes_and_edges function?
 
