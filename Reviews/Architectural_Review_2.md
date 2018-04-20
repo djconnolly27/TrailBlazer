@@ -28,3 +28,5 @@ Our program also has other features like the day’s weather forecast.
 * Weather API(2 min)
 * Next Steps (2 min)
 * Questions (5 min)
+
+Google Slides [here](https://docs.google.com/presentation/d/1PGvcYHVPr9ckfCVudnI8rpRtdnQ3gKwyF9aW6qwvp5I/edit?usp=sharing)
