@@ -8,7 +8,7 @@ Our program also has other features like the day’s weather forecast.
 # Background Information:
 
 * Tkinter - A GUI for the users to interface with our software.
-* Overpy - An API off which we pulled datapoints for run-able paths. 
+* Overpy - An API of which we pulled datapoints for run-able paths. 
 * NetworkX - A program that takes our points, finds the shortest paths and creates a graph.
 * Weather API - Returns current weather data from Yahoo Weather. 
 
