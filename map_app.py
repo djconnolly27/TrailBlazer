@@ -20,7 +20,6 @@ def findWeather(place):
     return location
 
 def getCondition(location):
-
     condition = location.condition
     return condition
 
@@ -29,6 +28,8 @@ def getForcast(location):
     forecasts = location.forecast
     forecast = forecasts[1]
     return forecast
+
+
 
 
 def valid_login(firstname, lastname, email, username, password):
@@ -44,8 +45,8 @@ def valid_login(firstname, lastname, email, username, password):
         return False
     return True
 
-def log_the_user_in(firstname, lastname):
-    return render_template('profile.html', firstname=firstname, lastname=lastname)
+def log_the_user_in(firstname, lastname, location):
+    return render_template('profile.html', firstname=firstname, lastname=lastname, location=location)
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -62,7 +63,7 @@ def login():
                 f.write(request.form['email'])
                 f.write(request.form['username'])
                 f.write(request.form['password'])
-            return log_the_user_in(request.form['firstname'], request.form['lastname'])
+            return log_the_user_in(request.form['firstname'], request.form['lastname'],request.form['location'])
         else:
             error = 'Missing required information'
     return render_template('error.html', error=error)
