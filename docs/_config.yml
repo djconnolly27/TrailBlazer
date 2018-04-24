@@ -6,4 +6,4 @@ defaults:
       type: docs
     values:
       sidebar:
-        nav: "docs"
+        nav: navigation.yml
