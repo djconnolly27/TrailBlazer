@@ -6,4 +6,11 @@ defaults:
       type: docs
     values:
       sidebar:
-        nav: navigation.yml
+        nav: "docs"
+docs:
+  - title: Getting Started
+    children:
+      - title: "Quick-Start Guide"
+        url: /docs/index.md
+      - title: "Structure"
+        url: /docs/run.md
