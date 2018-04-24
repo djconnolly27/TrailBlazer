@@ -1,3 +1,5 @@
+![alt text](Trail_Blazer_Logo.png)
+
 ### By Daniel Connolly, Raquel Dunoff, and Lydia Hodges
 
 ## What is it?
