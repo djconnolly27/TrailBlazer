@@ -5,3 +5,6 @@ Trail Blazer is a route suggestion GUI that helps people on foot find new routes
 
 ## Features:
 Trail Blazer allows a user to click a location on a map and provide a desired distance and then finds and displays a nonoverlapping route that meets the user's criteria on a map. Test is out for yourself by following the instructions found [here](run.md).
+
+## The Team
+Trail Blazer was developed by three first year students at Olin College of Engineering as a final project for their Software Design course during the spring of 2018. Read more about the team [here](team.md).
