@@ -1,4 +1,5 @@
 theme: jekyll-theme-slate
+title: Trail Blazer
 defaults:
   # _docs
   - scope:
