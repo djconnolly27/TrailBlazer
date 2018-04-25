@@ -9,6 +9,8 @@ from geopy.distance import VincentyDistance, vincenty
 import geographiclib
 from geographiclib.geodesic import Geodesic
 import folium
+import matplotlib.pyplot as plt
+import mplleaflet
 
 api = overpy.Overpass()
 
@@ -144,66 +146,46 @@ for edge in edge_list:
     reverse_ends = edge.end, edge.start
     nodes_edges[reverse_ends] = edge
 
-nodes_by_id = []
-id_to_node = {}
-for way in result.ways:
-    for node in way.nodes:
-        nodes_by_id.append(node.id)
-        id_to_node[node.id] = node
+#
+# nodes_by_id = []
+# id_to_node = {}
+# for way in result.ways:
+#     for node in way.nodes:
+#         nodes_by_id.append(node.id)
+#         id_to_node[node.id] = node
 
-import networkx as nx
-import matplotlib.pyplot as plt
-G = nx.Graph()
-for vertex in intersections:
-    G.add_node(vertex.id, coord=(float(vertex.lat), float(vertex.lon)))
-count = 0
-for path in edge_list:
-    count += 1
-    G.add_edge(path.start.id, path.end.id, weight=path.length)
+def find_cycle2(path_length, visited):
+    found = []
+    if len(visited) < 25:
+        for neighbor in neighboring_nodes[visited[len(visited) - 1]]:
+            if len(found) < 1:
+                if neighbor == visited[0] and len(visited) != 2:
+                    new_path_length = path_length - nodes_edges[(visited[len(visited) - 1], neighbor)].length
+                    if new_path_length < 0.0:
+                        found.append(list(visited + [neighbor]))
+                elif neighbor not in visited:
+                    new_path_length = path_length - nodes_edges[(visited[len(visited) - 1], neighbor)].length
+                    if new_path_length > 0.0:
+                        found.extend(find_cycle2(new_path_length, list(visited + [neighbor])))
+    return found
 
-cycle = nx.find_cycle(G, 530968968)
+for node in neighboring_nodes:
+    if node.id == 530968968:
+        my_node = node
 
-all_cycles=nx.cycle_basis(G)
-correct_cycles = []
-for cycle in all_cycles:
-    if 530968968 in cycle:
-        correct_cycles.append(cycle)
-
-for cycle in correct_cycles:
-    for i in range(len(cycle) - 1):
-        cycle[i] = (cycle[i], cycle[i+1])
-    cycle.remove(cycle[-1])
-
-length_cycles = {}
-for cycle in correct_cycles:
-    length_cycles[sum([G.get_edge_data(edge[0], edge[1])['weight'] for edge in cycle])] = cycle
-
-# print(len(correct_cycles[-2]))
-plottable_cycle = []
-for connection in correct_cycles[-2]:
-    edge = nodes_edges[id_to_node[connection[0]], id_to_node[connection[1]]]
-    plottable_cycle.append(edge)
+potential_cycles = find_cycle2(2.0, [my_node])
+for cyc in potential_cycles:
+    print(cyc)
+    print()
 
 lats = []
 lons = []
-for edge in plottable_cycle:
-    lats.append(edge.start.lat)
-    lons.append(edge.start.lon)
-    for node in edge.node_list:
-        lats.append(node.lat)
-        lons.append(node.lon)
-    lats.append(edge.end.lat)
-    lons.append(edge.end.lon)
+for node in potential_cycles[0]:
+    lats.append(node.lat)
+    lons.append(node.lon)
 
-import mplleaflet
 plt.hold(True)
 
 plt.plot(lons, lats, 'ro')
 plt.plot(lons, lats, 'b')
 mplleaflet.show()
-
-# G.remove_node(68330106)
-# G.remove_node(1934014646)
-
-# nx.draw(G,nx.get_node_attributes(G, 'coord'),node_size=2)
-# plt.show()
