@@ -1,13 +1,4 @@
-theme: jekyll-theme-slate
-title: Trail Blazer
-defaults:
-  # _docs
-  - scope:
-      path: ""
-      type: docs
-    values:
-      sidebar:
-        nav: "docs"
+# documentation links
 docs:
   - title: Getting Started
     children:
@@ -15,3 +6,5 @@ docs:
         url: /docs/index.md
       - title: "Structure"
         url: /docs/run.md
+      - title: "Installation"
+        url: team.md
