@@ -5,8 +5,28 @@ Put your Flask app code here.
 from flask import Flask
 from flask import render_template
 from flask import request
+import googlemaps
+from datetime import datetime
+from urllib.request import urlopen
+import urllib
+import json
+import os
 import plot_a_route
 app = Flask(__name__)
+
+DIRECTIONS_API_KEY = os.environ["DIRECTIONS_KEY"]
+GEOCODING_API_KEY = os.environ['GEOCODING_KEY']
+
+GMAP_BASE_URL = "https://www.google.com/maps/embed/v1/place?key="
+
+
+
+def initial_URL(formatted_location):
+    return GMAP_BASE_URL + DIRECTIONS_API_KEY + "&q=" + formatted_location
+
+def format_location(location):
+    return location.replace(" ","+")
+
 
 @app.route('/')
 def home():
@@ -30,8 +50,6 @@ def getForcast(location):
     return forecast
 
 
-
-
 def valid_login(firstname, lastname, email, username, password):
     if firstname == '':
         return False
@@ -45,8 +63,17 @@ def valid_login(firstname, lastname, email, username, password):
         return False
     return True
 
+
 def log_the_user_in(firstname, lastname, location):
-    return render_template('profile.html', firstname=firstname, lastname=lastname, location=location)
+    weatherLocation = findWeather(location)
+    condition = getCondition(weatherLocation)
+    forcast = getForcast(weatherLocation)
+    mapURL = initial_URL(format_location(location))
+    gmap.draw("templates/my_map.html")
+    return render_template('profile.html', firstname=firstname,
+    lastname=lastname, location=location, date = condition.date,
+    temp=condition.temp, text = condition.text, high = forcast.high, low=forcast.low,
+    mapURL = mapURL)
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -73,16 +100,6 @@ def make_map():
     plot_a_route.run(request.form['start'], request.form['distance'])
     return render_template('my_map.html')
 
-@app.route('/weather', methods=['POST', 'GET'])
-def post_weather():
-    location = findWeather(request.form['place'])
-    condition = getCondition(location)
-    forcast = getForcast(location)
-    return render_template('map_app_weather.html',place=request.form['place'],date = condition.date, temp=condition.temp, text = condition.text, high = forcast.high, low=forcast.low)
 
 if __name__ == '__main__':
-    """place = "Olin College"
-    weather = findWeather(place)
-    condition = getCondition(weather)
-    print(condition.date)"""
     app.run()
