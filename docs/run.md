@@ -6,8 +6,8 @@ Additionally, you will need to install the following modules on your system:
 
 ### 1) GMPlot
 Run the following in the command line: pip install gmplot
-### 2) Flask
-Run the following in the command line: conda install Flask
+### 2) Googlemaps
+Run the following in the command line: pip install googlemaps
 ### 3) Geopy 
 Run the following in the command line: pip install geopy
 ### 4) Geographiclib 
@@ -18,6 +18,6 @@ Run the following in the command line: pip install polyline
 Run the following in the command line: pip install overpy
 ### 7) Weather API
 Run the following in the command line: pip install weather-api
-### 8) mplleaflet
+### 8) Mplleaflet
 Run the following in the command line: pip install mplleaflet
 
