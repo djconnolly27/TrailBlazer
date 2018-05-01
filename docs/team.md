@@ -10,5 +10,5 @@ Daniel is a first year student in Electrical and Computer Engineering at Olin Co
 Lydia is a first year student in Engineering at Olin College of Engineering.
 
 ### Raquel Dunoff
-![alt text](images/Profile.jpg)
+![alt text](images/small_profile.jpg)
 Raquel is a first year student in Engineering with a concentration in Design at Olin College of Engineering. She is also interseted in community building and entrepreneurship and plans to start her own start up this summer. 
