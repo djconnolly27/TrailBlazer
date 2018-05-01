@@ -36,13 +36,15 @@ Overpy - run the following in the command line: pip install overpy
 
 Weather API - run the following in the command line: pip install weather-api
 
+MatPlotLib - You probably already have this on your computer
+
 You will also need to get a Google Maps Directions API key as well as a Google Maps Geocoding API key and run the following in the command line:
 export GEOCODING_KEY = your_geocoding_key
-export DIRECTIONS_KEY = your_directions_key
+export ELEVATION_KEY = your_elevation_key
 
 You can obtain a geocoding key from https://developers.google.com/maps/documentation/geocoding/intro
 
-You can obtain a directions key from https://developers.google.com/maps/documentation/directions/
+You can obtain a elevation key from https://developers.google.com/maps/documentation/elevation/start
 
 
 
