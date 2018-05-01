@@ -18,6 +18,7 @@ Like most aspects of Trail Blazer, the team did not set out expecting to make a 
 ### Features:
 Trail Blazer allows a user to provide a starting location and a desired distance before it finds and displays a nonoverlapping route that meets the user's criteria on a map. Test is out for yourself by following the instructions found [here](run.md). Furthermore, the team behind Trail Blazer has recently recognized the value of incorporating additional data regarding conditions into the GUI. For instance, it can currently find and display weather and elevation data about each route that the program generates.
 
+The website for this project can be found here: https://draconian9908.github.io/TrailBlazer/
 
 #### Modules
 To run our program, please install the following modules:
