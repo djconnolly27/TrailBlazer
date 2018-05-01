@@ -18,3 +18,6 @@ Run the following in the command line: pip install polyline
 Run the following in the command line: pip install overpy
 ### 7) Weather API
 Run the following in the command line: pip install weather-api
+### 8) mplleaflet
+Run the following in the command line: pip install mplleaflet
+
