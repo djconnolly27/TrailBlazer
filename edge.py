@@ -1,5 +1,10 @@
+'''
+Software Design Final Project: Trail Blazer
+'''
+
 from geopy.distance import vincenty
 from geographiclib.geodesic import Geodesic
+
 class Edge():
     ''' Defines edges, which are the parts of roads or paths that connect the nodes (intersections) to one another. An edge contains a start node, an end node, a list of points, and a length. '''
 

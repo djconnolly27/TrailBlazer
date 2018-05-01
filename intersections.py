@@ -1,20 +1,15 @@
 '''
 Software Design Final Project: Trail Blazer
 
-Intersections.py takes a bounding area, finds all of the paths in that area, and designates the parts of those paths as nodes and edges.
+Intersections.py takes starting coordinates and a distance and finds and plots a nonoverlapping route of that length that starts at that point.
 '''
 import overpy
-import geopy
-from geopy.distance import VincentyDistance, vincenty
-import geographiclib
-from geographiclib.geodesic import Geodesic
-import folium
-import matplotlib.pyplot as plt
-import mplleaflet
+from geopy.distance import vincenty
 from edge import Edge
 from graph import Graph
 
 def get_nearest_node(api, lat, lng):
+    ''' Finds and returns the node nearest to a given set of lat-lng coordinates. '''
     G = Graph(api, lat, lng, 0.0015)
     G.get_ways_in_area()
     G.get_vertices()
@@ -31,11 +26,12 @@ def get_nearest_node(api, lat, lng):
             closest[1] = distance
     return closest[0]
 
-def graph_it(api, lat, lng, radius):
+def graph_it(api, lat, lng, radius, distance):
+    ''' Finds and graphs a cycle of a given length starting from near a given lat-lng point. '''
     start = get_nearest_node(api, lat, lng)
     G2 = Graph(api, lat, lng, radius)
-    return G2.show_route(start)
+    return G2.show_route(distance, start)
 
 if __name__ == "__main__":
     api = overpy.Overpass()
-    graph_it(api, 42.292922, -71.263073, 0.04)
+    graph_it(api, 42.292922, -71.263073, 0.04, 1.1)

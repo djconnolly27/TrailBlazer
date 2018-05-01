@@ -1,14 +1,16 @@
 '''
 Software Design Final Project: Trail Blazer
-
 '''
+
 import overpy
 from geopy.distance import vincenty
 from edge import Edge
 
 class Graph():
+    ''' Defines graphs, which in this case is a model of a map constructed for purposes of manipulating its nodes and edges. '''
 
     def __init__(self, api, lat, lng, rad):
+        ''' Initializes the graph. '''
         self.api = api
         self.home_lat = lat
         self.home_lng = lng
@@ -23,7 +25,7 @@ class Graph():
         self.epsilon = 0.25
 
     def get_ways_in_area(self):
-        ''' Gets all ways and nodes in a given area. '''
+        ''' Requests the data from a specific geographic area surrounding a central point. '''
         lat1 = self.home_lat - self.size
         lng1 = self.home_lng - self.size
         lat2 = self.home_lat + self.size
@@ -36,7 +38,7 @@ class Graph():
         self.ways = self.api.query(query_str).ways
 
     def get_vertices(self):
-        ''' Gets all of the valid nodes/points that are on roads or paths. '''
+        ''' Gets all of the nodes and the number of times each appears in the data received from the api. '''
         self.node_appearances = {}
         for way in self.ways:
             for node in way.nodes:
@@ -79,12 +81,11 @@ class Graph():
                         new_edge.add_multiple_nodes(y[1:-1])
                     new_edge.update_distance()
                     self.edge_list.append(new_edge)
-        # return edge_list
 
     def get_neighboring_nodes(self):
+        ''' Determines the neighbors of each node in the dataset and stores the results in a dictionary. '''
         self.neighboring_nodes = {}
         for new_edge in self.edge_list:
-            # The following section determines which nodes neighbor one another and how far each neighboring node is from the origin node.
             if new_edge.start in self.neighboring_nodes and new_edge.end in self.neighboring_nodes:
                 self.neighboring_nodes[new_edge.start].append(new_edge.end)
                 self.neighboring_nodes[new_edge.end].append(new_edge.start)
@@ -97,10 +98,9 @@ class Graph():
             else:
                 self.neighboring_nodes[new_edge.start] = [new_edge.end]
                 self.neighboring_nodes[new_edge.end] = [new_edge.start]
-        # return self.neighboring_nodes
-        # return neighboring_nodes
 
-    def create_graph(self):
+    def map_ends_to_edge(self):
+        ''' Creates a dictionary that maps a tuple containing the end points of an edge to the corresponding edge. '''
         self.nodes_edges = {}
         for edge in self.edge_list:
             ends = edge.start, edge.end
@@ -112,22 +112,19 @@ class Graph():
             reverse_edge.add_multiple_nodes(edge.node_list[::-1])
             reverse_edge.update_distance()
             self.nodes_edges[reverse_ends] = reverse_edge
-        # return nodes_edges
 
     def find_cycle(self, path_length, visited):
+        ''' Finds a cycle of a given length in the graph. '''
         found = []
         if len(visited) < 25:
             for neighbor in self.neighboring_nodes[visited[len(visited) -1]]:
-                # print(neighbor)
-                # print(visited)
                 if len(found) >= 1:
                     break
                 else:
                     if neighbor == visited[0] and len(visited) != 2:
                         new_path_length = path_length - self.nodes_edges[(visited[len(visited) - 1], neighbor)].length
-                        if abs(new_path_length) < self.epsilon: #epsilon = 0.25
+                        if abs(new_path_length) < self.epsilon:
                             found.append(list(visited + [neighbor]))
-                            # print(found)
                     elif neighbor not in visited:
                         new_path_length = path_length - self.nodes_edges[(visited[len(visited) - 1], neighbor)].length
                         if new_path_length > 0.0:
@@ -135,12 +132,13 @@ class Graph():
         return found
 
     def find_edges_in_path(self, distance, start):
+        ''' Constructs a list containing all of the edges that compose a cycle of a given length. '''
         self.get_ways_in_area()
         self.get_vertices()
         self.get_intersections()
         self.find_nodes_and_edges()
         self.get_neighboring_nodes()
-        self.create_graph()
+        self.map_ends_to_edge()
         for x in self.neighboring_nodes:
             if x.id == start.id:
                 start_node = x
@@ -155,12 +153,13 @@ class Graph():
             self.plottable_cycle.append(edge)
         self.plottable_cycle
 
-    def show_route(self, start):
+    def show_route(self, distance, start):
+        ''' Plots a cycle in the graph that starts at a given point. '''
         import matplotlib.pyplot as plt
         import mplleaflet
         lats = []
         lons = []
-        self.find_edges_in_path(1.1, start)
+        self.find_edges_in_path(distance, start)
         for edge in self.plottable_cycle:
             lats.append(edge.start.lat)
             lons.append(edge.start.lon)
