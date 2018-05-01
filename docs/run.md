@@ -1,6 +1,6 @@
 # Run Trail Blazer:
 
-In order to run Trail Blazer on a Linux system, you will need to clone our github repository: https://github.com/draconian9908/TrailBlazer.git
+In order to run Trail Blazer on a Linux system, you will need to clone our github repository: [https://github.com/draconian9908/TrailBlazer.git](https://github.com/draconian9908/TrailBlazer.git)
 
 Additionally, you will need to install the following modules on your system:
 
