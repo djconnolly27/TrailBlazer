@@ -11,8 +11,8 @@ import numpy as np
 
 import os
 
-GEOCODING_API_KEY = os.environ['GEOCODING_KEY']
-ELEVATION_API_KEY = os.environ['ELEVATION_KEY']
+GEOCODING_API_KEY = "AIzaSyA4WtBU35L_hml2GTdqtLbHk-IXd76dRuw"
+ELEVATION_API_KEY = "AIzaSyCuHDqWKO7-zWFrU5qhWsaLydNk1mhvaPY"
 
 gmaps = googlemaps.Client(key=GEOCODING_API_KEY) #Creates google map
 

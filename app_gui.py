@@ -5,11 +5,8 @@ app_gui.py wraps up all the functions sofar created in an interactive GUI for th
 """
 
 from tkinter import *
-from AnimatedGif import *
 import intersections
 import overpy
-import urllib.request
-import webbrowser
 
 class TrailBlazerGUI:
     def __init__(self, master):
@@ -43,13 +40,11 @@ class TrailBlazerGUI:
                                     activebackground="#bcf5bc", activeforeground="#8b5d2e", command=master.quit)
         self.cancel.grid(row=0, column=1)
 
-        self.gif = AnimatedGif(self.start, 'images/oregonTrail.gif', 0.5)
-        self.gif.config(background=self.bg)
-        self.gif.pack(side=BOTTOM)
-        self.gif.start()
+        self.logo = PhotoImage(file="images/trail_blazer_logo.gif")
+        self.logo_disp = Label(self.start, image=self.logo, fg=self.fg, bg=self.bg)
+        self.logo_disp.pack(side=BOTTOM)
 
     def login_page(self, event=None):
-        #self.l_page = Toplevel(bg=self.bg)
         if self.e_page!="empty":
             self.e_page.pack_forget()
             self.e_page.destroy()
@@ -59,10 +54,6 @@ class TrailBlazerGUI:
         self.l_page = Frame(self.master, height=1080, width=1920, bg=self.bg)
         self.l_page.pack()
         self.l_page.focus_set()
-        #self.l_page.geometry("1920x1080")
-        #if self.e_page!="empty":
-        #    self.e_page.withdraw()
-        #self.master.withdraw()
         self.l_page.bind("<Return>", self.valid_login)
         self.l_page.bind("<Escape>", self.close)
 
@@ -100,6 +91,7 @@ class TrailBlazerGUI:
         self.pss_in.bind("<Return>", self.valid_login)
         self.pss_in.grid(row=3, column=1, columnspan=3)
 
+
         self.buttons2 = Frame(self.l_page, width=500, bg=self.bg)
         self.buttons2.pack()
         self.submit = Button(self.buttons2, text="Submit", bg="#64e764", fg="#654321", pady=5,
@@ -111,14 +103,7 @@ class TrailBlazerGUI:
         self.cancel.bind("<Return>", self.valid_login)
         self.cancel.grid(row=0, column=1)
 
-        # self.mappy = Button(self.l_page, text="Temporary Map", bg="#64e764", fg="#654321", pady=5,
-        #                     activebackground="#bcf5bc", activeforeground="#8b5d2e", command=self.get_map)
-        # self.mappy.pack()
-
     def home_page(self, event=None):
-        #self.l_page.withdraw()
-        #self.h_page = Toplevel(bg=self.bg)
-        #self.h_page.geometry("1920x1080")
         first_name = self.first_in.get()
         last_name = self.last_in.get()
         self.l_page.pack_forget()
@@ -129,30 +114,39 @@ class TrailBlazerGUI:
         self.h_page.bind("<Return>", self.find_route)
         self.h_page.bind("<Escape>", self.close)
 
+
         self.hello = Label(self.h_page, text="Hello! Welcome to your profile page!", font=("sans serif", 50),
                             bg=self.bg, fg=self.fg, pady=20)
         self.hello.pack()
 
+
         self.weather_init = Frame(self.h_page, width=1000, bg=self.bg)
         self.weather_init.pack()
+        self.weather_init.bind("<Return>", self.get_forecast)
         self.location = Label(self.weather_init, text="Current Location = ", font=("sans serif", 15), anchor=W, bg=self.bg,
                             fg=self.fg, pady=10)
         self.location.grid(row=0, sticky=E)
         self.location_in = Entry(self.weather_init, font=("sans serif", 15), exportselection=0, cursor="xterm")
+        self.location_in.bind("<Return>", self.get_forecast)
         self.location_in.grid(row=0, column=1)
+
 
         self.buttons5 = Frame(self.h_page, width=500, bg=self.bg)
         self.buttons5.pack()
+        self.buttons5.bind("<Return>", self.get_forecast)
         self.weatherby = Button(self.buttons5, text="Find Weather", bg="#64e764", fg="#654321",
                             activebackground="#bcf5bc", activeforeground="#8b5d2e", pady=5, command=self.get_forecast)
         self.weatherby.grid(row=0, column=0)
+
 
         self.name_is = Label(self.h_page, text="Where would you like to go, %s %s?" % (first_name, last_name),
                             font=("sans serif", 15), fg=self.fg, bg=self.bg, pady=10)
         self.name_is.pack()
 
+
         self.profile = Frame(self.h_page, width=1000, bg=self.bg)
         self.profile.pack()
+        self.profile.bind("<Return>", self.find_route)
         self.loc = Label(self.profile, text="Starting Location:", font=("sans serif", 15), anchor=W, bg=self.bg,
                             fg=self.fg, pady=10)
         self.loc.grid(row=0, sticky=E)
@@ -160,29 +154,29 @@ class TrailBlazerGUI:
                             fg=self.fg, pady=10)
         self.lat.grid(row=1, column=0)
         self.lat_in = Entry(self.profile, font=("sans serif", 15), exportselection=0, cursor="xterm")
-        self.lat_in.insert(0,"-71.263073")
+        self.lat_in.bind("<Return>", self.find_route)
+        self.lat_in.insert(0,"42.292922")
         if self.profile.focus_get() == self.lat_in:
             self.lat_in.delete()
-        # self.lat_in.config(state="readonly")
-        # if self.profile.focus_get() == self.lat_in:
-        #     self.lat_in.config(state=NORMAL)
         self.lat_in.grid(row=1, column=1)
         self.lng = Label(self.profile, text="Longitude = ", font=("sans serif", 15), anchor=W, bg=self.bg,
                             fg=self.fg, pady=10)
         self.lng.grid(row=1, column=2)
         self.lng_in = Entry(self.profile, font=("sans serif", 15), exportselection=0, cursor="xterm")
-        self.lng_in.insert(0,"42.292922")
+        self.lng_in.bind("<Return>", self.find_route)
+        self.lng_in.insert(0,"-71.263073")
         if self.profile.focus_get() == self.lat_in:
             self.lat_in.delete()
-        # self.lng_in.config(state="readonly")
-        # if self.profile.focus_get() == self.lng_in:
-        #     self.lng_in.config(state=NORMAL)
         self.lng_in.grid(row=1, column=3)
         self.dist = Label(self.profile, text="Distance(km) = ", font=("sans serif", 15), anchor=W, bg=self.bg,
                             fg=self.fg, pady=10)
         self.dist.grid(row=2, sticky=E)
         self.dist_in = Entry(self.profile, font=("sans serif", 15), exportselection=0, cursor="xterm")
+        self.dist_in.bind("<Return>", self.find_route)
         self.dist_in.grid(row=2, column=1)
+        self.dist_max = Label(self.profile, text="Maximum distance = 2", font=("sans serif", 10), anchor=W, bg=self.bg,
+                            fg=self.fg, pady=10, padx=10)
+        self.dist_max.grid(row=2, column=2, sticky=E)
 
 
         self.buttons3 = Frame(self.h_page, width=500, bg=self.bg)
@@ -202,6 +196,7 @@ class TrailBlazerGUI:
         self.e_page.focus_set()
         self.e_page.bind("<Return>", self.login_page)
         self.e_page.bind("<Escape>", self.close)
+
 
         self.err_title = Label(self.e_page, text="Error: Missing Information", font=("sans serif", 50),
                                 bg=self.bg, fg=self.fg, pady=10)
@@ -238,29 +233,29 @@ class TrailBlazerGUI:
         self.forecasts = self.local.forecast
         self.forecast = self.forecasts[1]
 
+
         self.location.destroy()
         self.location_in.destroy()
         self.buttons5.destroy()
 
-        self.weather_1 = Label(self.weather_init, text="Today's weahter will be %s and %s F" % (self.condition.text,self.condition.temp),
-                                    font=("sans serif", 15), justify=CENTER, fg=self.fg, bg=self.bg)
+
+        self.weather_1 = Label(self.weather_init, text="Today's weather will be %s and %s F" % (self.condition.text,self.condition.temp),
+                                    font=("sans serif", 17), justify=CENTER, fg=self.fg, bg=self.bg)
         self.weather_1.pack()
         self.weather_2 = Label(self.weather_init, text="with a high of %s F and a low of %s F." % (self.forecast.high, self.forecast.low),
-                                font=("sans serif", 13), justify=CENTER, fg=self.fg, bg=self.bg)
+                                font=("sans serif", 15), justify=CENTER, fg=self.fg, bg=self.bg)
         self.weather_2.pack()
         self.weather_3 = Label(self.weather_init, text="According to Yahoo weather on %s." % (self.condition.date),font=("sans serif", 10),
                                 justify=CENTER, fg=self.fg, bg=self.bg, pady=5)
         self.weather_3.pack()
 
-    def get_map(self):
-        webbrowser.open("file:///home/lhodges/TrailBlazer/templates/my_map.html")
-
     def find_route(self, event=None):
         api = overpy.Overpass()
         lat = float(self.lat_in.get())
         lng = float(self.lng_in.get())
-        radius = 0.04
+        radius = 0.01
         distance = float(self.dist_in.get())
+        print(lat,lng,distance)
         intersections.graph_it(api,lat,lng,radius,distance)
 
     def close(self, event=None):
