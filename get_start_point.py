@@ -6,6 +6,8 @@ get_start_point.py finds a starting location from a user specified point on a go
 import googlemaps
 from datetime import datetime
 from googlemaps import convert
+import matplotlib.pyplot as plt
+import numpy as np
 
 import os
 
@@ -35,17 +37,27 @@ if __name__ == '__main__':
     lats = (42.293114, 42.292670, 42.291980, 42.291908, 42.292519,42.292354, 42.293600, 42.295283, 42.296575)
     longs = (-71.264425, -71.263695, -71.263760, -71.262730, -71.261625,-71.261099,-71.260166,-71.259657, -71.260000)
     lat_long = []
+    elevations = []
+
+
 
     for i in range(len(lats)):
         lat_long = (lats[i],longs[i])
-    print(lat_long)
+        elevationData = gmaps.elevation(lat_long)
+        elevation = elevationData[0]['elevation']
+        elevations.append(elevation)
 
-    lat_long_list= []
+    plt.plot(elevations)
+    plt.show()
+
+    #print(gmaps.elevation(lat_long)['elevation'])
+
+    """lat_long_list= []
 
     for i in range(len(lats)):
         coord_tuple =  [lats[i] , longs[i]]
         lat_long_list += coord_tuple
 
-    print(lat_long_list)
-    gmaps.elevation(lat_long)
+    print(lat_long_list)"""
+    #gmaps.elevation(lat_long)
     #gmaps.elevation_along_path(lat_long_list,10)
