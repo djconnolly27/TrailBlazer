@@ -1,10 +1,13 @@
-"""
-Code for the creation and running of the GUI for Trail Blazer.
+""""
+Software Design Final Project: Trail Blazer
+
+app_gui.py wraps up all the functions sofar created in an interactive GUI for the user.
 """
 
 from tkinter import *
 from AnimatedGif import *
-from tkinterhtml import HtmlFrame
+import intersections
+import overpy
 import urllib.request
 import webbrowser
 
@@ -71,46 +74,46 @@ class TrailBlazerGUI:
 
         self.login = Frame(self.l_page, width=1000, bg=self.bg)
         self.login.pack()
+        self.login.bind("<Return>", self.valid_login)
         self.first = Label(self.login, text="First Name = ", font=("sans serif", 15), anchor=W, bg=self.bg,
                             fg=self.fg, pady=10)
         self.first.grid(row=0, sticky=E)
         self.first_in = Entry(self.login, font=("sans serif", 15), exportselection=0, cursor="xterm")
+        self.first_in.bind("<Return>", self.valid_login)
         self.first_in.grid(row=0, column=1, columnspan=3)
         self.last = Label(self.login, text="Last Name = ", font=("sans serif", 15), anchor=W, bg=self.bg,
                             fg=self.fg, pady=10)
         self.last.grid(row=1, sticky=E)
         self.last_in = Entry(self.login, font=("sans serif", 15), exportselection=0, cursor="xterm")
+        self.last_in.bind("<Return>", self.valid_login)
         self.last_in.grid(row=1, column=1, columnspan=3)
         self.user = Label(self.login, text="Username = ", font=("sans serif", 15), anchor=W, bg=self.bg,
                             fg=self.fg, pady=10)
         self.user.grid(row=2, sticky=E)
         self.user_in = Entry(self.login, font=("sans serif", 15), exportselection=0, cursor="xterm")
+        self.user_in.bind("<Return>", self.valid_login)
         self.user_in.grid(row=2, column=1, columnspan=3)
         self.pss = Label(self.login, text="Password = ", font=("sans serif", 15), anchor=W, bg=self.bg,
                             fg=self.fg, pady=10)
         self.pss.grid(row=3, sticky=E)
         self.pss_in = Entry(self.login, font=("sans serif", 15), exportselection=0, cursor="xterm", show="*")
+        self.pss_in.bind("<Return>", self.valid_login)
         self.pss_in.grid(row=3, column=1, columnspan=3)
-
-
-        # self.map_maybe = HtmlFrame(self.l_page, horizontal_scrollbar="auto")
-        # self.my_map = urllib.request.urlopen("file:///home/lhodges/TrailBlazer/templates/my_map.html").read().decode()
-        # self.map_maybe.set_content(str(self.my_map))
-        # self.map_maybe.pack()
-
 
         self.buttons2 = Frame(self.l_page, width=500, bg=self.bg)
         self.buttons2.pack()
         self.submit = Button(self.buttons2, text="Submit", bg="#64e764", fg="#654321", pady=5,
                             activebackground="#bcf5bc", activeforeground="#8b5d2e", command=self.valid_login)
+        self.submit.bind("<Return>", self.valid_login)
         self.submit.grid(row=0, column=0)
         self.cancel = Button(self.buttons2, text="Cancel", bg="#64e764", fg="#654321", pady=5,
                             activebackground="#bcf5bc", activeforeground="#8b5d2e", command=self.master.quit)
+        self.cancel.bind("<Return>", self.valid_login)
         self.cancel.grid(row=0, column=1)
 
-        self.mappy = Button(self.l_page, text="Temporary Map", bg="#64e764", fg="#654321", pady=5,
-                            activebackground="#bcf5bc", activeforeground="#8b5d2e", command=self.get_map)
-        self.mappy.pack()
+        # self.mappy = Button(self.l_page, text="Temporary Map", bg="#64e764", fg="#654321", pady=5,
+        #                     activebackground="#bcf5bc", activeforeground="#8b5d2e", command=self.get_map)
+        # self.mappy.pack()
 
     def home_page(self, event=None):
         #self.l_page.withdraw()
@@ -150,16 +153,36 @@ class TrailBlazerGUI:
 
         self.profile = Frame(self.h_page, width=1000, bg=self.bg)
         self.profile.pack()
-        self.loc = Label(self.profile, text="Starting Location = ", font=("sans serif", 15), anchor=W, bg=self.bg,
+        self.loc = Label(self.profile, text="Starting Location:", font=("sans serif", 15), anchor=W, bg=self.bg,
                             fg=self.fg, pady=10)
         self.loc.grid(row=0, sticky=E)
-        self.loc_in = Entry(self.profile, font=("sans serif", 15), exportselection=0, cursor="xterm")
-        self.loc_in.grid(row=0, column=1)
+        self.lat = Label(self.profile, text="Latitiude = ", font=("sans serif", 15), anchor=W, bg=self.bg,
+                            fg=self.fg, pady=10)
+        self.lat.grid(row=1, column=0)
+        self.lat_in = Entry(self.profile, font=("sans serif", 15), exportselection=0, cursor="xterm")
+        self.lat_in.insert(0,"-71.263073")
+        if self.profile.focus_get() == self.lat_in:
+            self.lat_in.delete()
+        # self.lat_in.config(state="readonly")
+        # if self.profile.focus_get() == self.lat_in:
+        #     self.lat_in.config(state=NORMAL)
+        self.lat_in.grid(row=1, column=1)
+        self.lng = Label(self.profile, text="Longitude = ", font=("sans serif", 15), anchor=W, bg=self.bg,
+                            fg=self.fg, pady=10)
+        self.lng.grid(row=1, column=2)
+        self.lng_in = Entry(self.profile, font=("sans serif", 15), exportselection=0, cursor="xterm")
+        self.lng_in.insert(0,"42.292922")
+        if self.profile.focus_get() == self.lat_in:
+            self.lat_in.delete()
+        # self.lng_in.config(state="readonly")
+        # if self.profile.focus_get() == self.lng_in:
+        #     self.lng_in.config(state=NORMAL)
+        self.lng_in.grid(row=1, column=3)
         self.dist = Label(self.profile, text="Distance(km) = ", font=("sans serif", 15), anchor=W, bg=self.bg,
                             fg=self.fg, pady=10)
-        self.dist.grid(row=1, sticky=E)
+        self.dist.grid(row=2, sticky=E)
         self.dist_in = Entry(self.profile, font=("sans serif", 15), exportselection=0, cursor="xterm")
-        self.dist_in.grid(row=1, column=1)
+        self.dist_in.grid(row=2, column=1)
 
 
         self.buttons3 = Frame(self.h_page, width=500, bg=self.bg)
@@ -197,39 +220,48 @@ class TrailBlazerGUI:
                             activebackground="#bcf5bc", activeforeground="#8b5d2e", command=self.master.quit)
         self.cancel.grid(row=0, column=1)
 
-    def valid_login(self,event=None):#, event=None):
+    def valid_login(self,event=None):
         firstname = self.first_in.get()
         lastname = self.last_in.get()
         username = self.user_in.get()
         password = self.pss_in.get()
-        print("All data checked")
         if not firstname and not lastname and not username and not password:
             return self.error()
         else:
-            print("Running through")
             return self.home_page()
 
     def get_forecast(self, event=None):
         from weather import Weather, Unit
         self.weather = Weather(unit=Unit.FAHRENHEIT)
-        self.location = weather.lookup_by_location(self.location_in.get())
-        self.condition = location.condition
-        self.forecasts = location.forecast
-        self.forecast = forecasts[1]
+        self.local = self.weather.lookup_by_location(self.location_in.get())
+        self.condition = self.local.condition
+        self.forecasts = self.local.forecast
+        self.forecast = self.forecasts[1]
 
-        self.location.withdraw()
-        self.location_in.withdraw()
-        self.buttons5.withdraw()
+        self.location.destroy()
+        self.location_in.destroy()
+        self.buttons5.destroy()
 
-        self.display_weather = Message(self.weather_init, text="Today's weahter will be %s and %s F.\nWith a high of %s F and a low of %s F.\nAccording to Yahoo weather on %s." % (self.condition.text,self.condition.temp,
-                                    self.forecast.high, self.forecast.low,self.condition.date),font=("sans serif", 15), justify=CENTER, fg=self.fg, bg=self.bg, pady=10)
-        self.display_weather.grid()
+        self.weather_1 = Label(self.weather_init, text="Today's weahter will be %s and %s F" % (self.condition.text,self.condition.temp),
+                                    font=("sans serif", 15), justify=CENTER, fg=self.fg, bg=self.bg)
+        self.weather_1.pack()
+        self.weather_2 = Label(self.weather_init, text="with a high of %s F and a low of %s F." % (self.forecast.high, self.forecast.low),
+                                font=("sans serif", 13), justify=CENTER, fg=self.fg, bg=self.bg)
+        self.weather_2.pack()
+        self.weather_3 = Label(self.weather_init, text="According to Yahoo weather on %s." % (self.condition.date),font=("sans serif", 10),
+                                justify=CENTER, fg=self.fg, bg=self.bg, pady=5)
+        self.weather_3.pack()
 
     def get_map(self):
         webbrowser.open("file:///home/lhodges/TrailBlazer/templates/my_map.html")
 
     def find_route(self, event=None):
-        pass
+        api = overpy.Overpass()
+        lat = float(self.lat_in.get())
+        lng = float(self.lng_in.get())
+        radius = 0.04
+        distance = float(self.dist_in.get())
+        intersections.graph_it(api,lat,lng,radius,distance)
 
     def close(self, event=None):
         self.master.quit()
