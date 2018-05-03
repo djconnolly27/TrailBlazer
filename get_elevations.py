@@ -32,9 +32,10 @@ def get_elevation_list(lats=(42.293114, 42.292670, 42.291980, 42.291908, 42.2925
         elevations.append(elevation) #add the elevation to the list
     return elevations
 
-def plot_elevation(elevations):
+def plot_elevation(elevations,d=8):
+    d = d
     plt.plot(elevations,color = 'g')
-    plt.fill_between(np.linspace(0,8,num=9),elevations,0,alpha=0.5, color='g')
+    plt.fill_between(np.linspace(0,d,num=len(elevations)),elevations,0,alpha=0.5, color='g')
     plt.show()
 
 if __name__ == '__main__':

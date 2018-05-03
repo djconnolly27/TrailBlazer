@@ -271,7 +271,7 @@ class TrailBlazerGUI:
         route = intersections.graph_it(api,lat,lng,radius,distance)
         route_coords = intersections.find_route_coords(route)
         unzipped = list(zip(*route_coords))
-        get_elevations.plot_elevation(get_elevations.get_elevation_list(lats=unzipped[0],longs=unzipped[1]))
+        get_elevations.plot_elevation(get_elevations.get_elevation_list(lats=unzipped[0],longs=unzipped[1]),d=distance)
 
     def close(self, event=None):
         self.master.quit()
