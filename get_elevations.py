@@ -33,9 +33,12 @@ def get_elevation_list(lats=(42.293114, 42.292670, 42.291980, 42.291908, 42.2925
     return elevations
 
 def plot_elevation(elevations,d=8):
-    d = d
-    plt.plot(elevations,color = 'g')
-    plt.fill_between(np.linspace(0,d,num=len(elevations)),elevations,0,alpha=0.5, color='g')
+    d = d*1000 #convert from km to m
+    distances = np.linspace(0,d,num=len(elevations)) #create array for plotting
+    plt.plot(distances,elevations,color = 'g')
+    plt.fill_between(distances,elevations,0,alpha=0.5, color='g')
+    plt.xlabel('Distance (m)')
+    plt.ylabel('Elevation (m)')
     plt.show()
 
 if __name__ == '__main__':
