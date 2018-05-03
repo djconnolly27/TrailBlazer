@@ -9,9 +9,9 @@ Daniel is a first year student in Electrical and Computer Engineering at Olin Co
 ### Lydia Hodges
 ![alt text](images/Profile_Pic_smaller.jpg)
 
-Lydia is a first year student in Bio Engineering at Olin College of Engineering.
+Lydia is a first year student in Bio Engineering at Olin College of Engineering. She is an ex-athlete with a heavy background in cross country and track & field, and has a strong interest in coding and programming, having done a little bit of coding for video games in Unreal Engine.
 
 ### Raquel Dunoff
 ![alt text](images/small_profile.jpg)
 
-Raquel is a first year student in Engineering with a concentration in Design at Olin College of Engineering. She is also interseted in community building and entrepreneurship and plans to start her own start up this summer. 
+Raquel is a first year student in Engineering with a concentration in Design at Olin College of Engineering. She is also interested in community building and entrepreneurship and plans to start her own start up this summer. 
