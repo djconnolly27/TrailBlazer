@@ -30,8 +30,20 @@ def graph_it(api, lat, lng, radius, distance):
     ''' Finds and graphs a cycle of a given length starting from near a given lat-lng point. '''
     start = get_nearest_node(api, lat, lng)
     G2 = Graph(api, lat, lng, radius)
-    return G2.show_route(distance, start)
+    G2.get_route_coords(distance, start)
+    return G2
+
+def find_route_coords(graph):
+    coords = []
+    for i in range(len(graph.lats)):
+        coords.append((float(graph.lats[i]), float(graph.lons[i])))
+    return coords
+
+def plot_graph(graph):
+    return graph.show_route()
 
 if __name__ == "__main__":
     api = overpy.Overpass()
-    graph_it(api, 42.292922, -71.263073, 0.04, 1.1)
+    route_graph = graph_it(api, 42.292922, -71.263073, 0.01, 1.1)
+    print(find_route_coords(route_graph))
+    plot_graph(route_graph)

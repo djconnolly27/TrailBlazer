@@ -22,7 +22,8 @@ class Graph():
         self.neighboring_nodes = {}
         self.nodes_edges = {}
         self.plottable_cycle = []
-        self.epsilon = 0.25
+        self.epsilon = 0.4
+        self.recursion_depth = 32
 
     def get_ways_in_area(self):
         ''' Requests the data from a specific geographic area surrounding a central point. '''
@@ -113,10 +114,42 @@ class Graph():
             reverse_edge.update_distance()
             self.nodes_edges[reverse_ends] = reverse_edge
 
+    # def find_cycle(self, path_length, visited):
+    #     ''' Finds a cycle of a given length in the graph. '''
+    #     found = []
+    #     if len(visited) < self.recursion_depth:
+    #         if len(visited) % 2 != 0:
+    #             neighbor = visited[0]
+    #             # if len(found) >= 1:
+    #             #     break
+    #             # else:
+    #             if neighbor == visited[0] and len(visited) <= 2:
+    #                 new_path_length = path_length - self.nodes_edges[(visited[len(visited) - 1], neighbor)].length
+    #                 if abs(new_path_length) < self.epsilon:
+    #                     found.append(list(visited + [neighbor]))
+    #             elif neighbor not in visited:
+    #                 new_path_length = path_length - self.nodes_edges[(visited[len(visited) - 1], neighbor)].length
+    #                 if new_path_length > 0.0:
+    #                     found.extend(self.find_cycle(new_path_length, list(visited + [neighbor])))
+    #         else:
+    #             for neighbor in self.neighboring_nodes[visited[len(visited) -1]]:
+    #                 if len(found) >= 1:
+    #                     break
+    #                 else:
+    #                     if neighbor == visited[0] and len(visited) != 2:
+    #                         new_path_length = path_length - self.nodes_edges[(visited[len(visited) - 1], neighbor)].length
+    #                         if abs(new_path_length) < self.epsilon:
+    #                             found.append(list(visited + [neighbor]))
+    #                     elif neighbor not in visited:
+    #                         new_path_length = path_length - self.nodes_edges[(visited[len(visited) - 1], neighbor)].length
+    #                         if new_path_length > 0.0:
+    #                             found.extend(self.find_cycle(new_path_length, list(visited + [neighbor])))
+    #     return found
+
     def find_cycle(self, path_length, visited):
         ''' Finds a cycle of a given length in the graph. '''
         found = []
-        if len(visited) < 25:
+        if len(visited) < self.recursion_depth:
             for neighbor in self.neighboring_nodes[visited[len(visited) -1]]:
                 if len(found) >= 1:
                     break
@@ -153,23 +186,28 @@ class Graph():
             self.plottable_cycle.append(edge)
         self.plottable_cycle
 
-    def show_route(self, distance, start):
+    def get_route_coords(self, distance, start):
+        ''' Finds lists of the lat-lng points that comprise a route. '''
+        self.lats = []
+        self.lons = []
+        self.begin = start
+        self.find_edges_in_path(distance, start)
+        for edge in self.plottable_cycle:
+            self.lats.append(edge.start.lat)
+            self.lons.append(edge.start.lon)
+            for node in edge.node_list:
+                self.lats.append(node.lat)
+                self.lons.append(node.lon)
+            self.lats.append(edge.end.lat)
+            self.lons.append(edge.end.lon)
+
+    def show_route(self):
         ''' Plots a cycle in the graph that starts at a given point. '''
         import matplotlib.pyplot as plt
         import mplleaflet
-        lats = []
-        lons = []
-        self.find_edges_in_path(distance, start)
-        for edge in self.plottable_cycle:
-            lats.append(edge.start.lat)
-            lons.append(edge.start.lon)
-            for node in edge.node_list:
-                lats.append(node.lat)
-                lons.append(node.lon)
-            lats.append(edge.end.lat)
-            lons.append(edge.end.lon)
+        # self.get_route_coords(distance, start)
 
         plt.hold(True)
-        plt.plot(start.lon, start.lat, 'ro')
-        plt.plot(lons, lats, 'b')
+        plt.plot(self.begin.lon, self.begin.lat, 'ro')
+        plt.plot(self.lons, self.lats, 'b')
         return mplleaflet.show()
