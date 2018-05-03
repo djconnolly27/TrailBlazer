@@ -16,12 +16,12 @@ ELEVATION_API_KEY = "AIzaSyCuHDqWKO7-zWFrU5qhWsaLydNk1mhvaPY"
 
 gmaps = googlemaps.Client(key=GEOCODING_API_KEY) #Creates google map
 
-def get_elevation_list():
+def get_elevation_list(lats=(42.293114, 42.292670, 42.291980, 42.291908, 42.292519,42.292354, 42.293600, 42.295283, 42.296575),longs=(-71.264425, -71.263695, -71.263760, -71.262730, -71.261625,-71.261099,-71.260166,-71.259657, -71.260000)):
     """Defines the longitude and lattitude coordinates in lists.
     Fills elevations with a list of corresponding elevations.
     """
-    lats = (42.293114, 42.292670, 42.291980, 42.291908, 42.292519,42.292354, 42.293600, 42.295283, 42.296575)
-    longs = (-71.264425, -71.263695, -71.263760, -71.262730, -71.261625,-71.261099,-71.260166,-71.259657, -71.260000)
+    lats = lats
+    longs = longs
     elevations = []
 
     #Populate elevations

@@ -6,6 +6,7 @@ app_gui.py wraps up all the functions sofar created in an interactive GUI for th
 
 from tkinter import *
 import intersections
+import get_elevations
 import overpy
 
 class TrailBlazerGUI:
@@ -184,9 +185,12 @@ class TrailBlazerGUI:
         self.enter = Button(self.buttons3, text="Find Route", bg="#64e764", fg="#654321",
                             activebackground="#bcf5bc", activeforeground="#8b5d2e", pady=5, command=self.find_route)
         self.enter.grid(row=0, column=0)
+        self.elev = Button(self.buttons3, text="View Elevation", bg="#64e764", fg="#654321",
+                            activebackground="#bcf5bc", activeforeground="#8b5d2e",pady=5, command=self.find_elevation)
+        self.elev.grid(row=0, column=1)
         self.cancel = Button(self.buttons3, text="Cancel", bg="#64e764", fg="#654321",
                             activebackground="#bcf5bc", activeforeground="#8b5d2e",pady=5, command=self.master.quit)
-        self.cancel.grid(row=0, column=1)
+        self.cancel.grid(row=0, column=2)
 
     def error(self, event=None):
         self.l_page.pack_forget()
@@ -255,8 +259,19 @@ class TrailBlazerGUI:
         lng = float(self.lng_in.get())
         radius = 0.01
         distance = float(self.dist_in.get())
-        print(lat,lng,distance)
-        intersections.graph_it(api,lat,lng,radius,distance)
+        route = intersections.graph_it(api,lat,lng,radius,distance)
+        intersections.plot_graph(route)
+
+    def find_elevation(self, event=None):
+        api = overpy.Overpass()
+        lat = float(self.lat_in.get())
+        lng = float(self.lng_in.get())
+        radius = 0.01
+        distance = float(self.dist_in.get())
+        route = intersections.graph_it(api,lat,lng,radius,distance)
+        route_coords = intersections.find_route_coords(route)
+        unzipped = list(zip(*route_coords))
+        get_elevations.plot_elevation(get_elevations.get_elevation_list(lats=unzipped[0],longs=unzipped[1]))
 
     def close(self, event=None):
         self.master.quit()
