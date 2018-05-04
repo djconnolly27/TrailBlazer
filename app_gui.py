@@ -4,13 +4,16 @@ Software Design Final Project: Trail Blazer
 app_gui.py wraps up all the functions sofar created in an interactive GUI for the user.
 """
 
-from tkinter import *
+from tkinter import Tk, Frame, Label, Message, CENTER, Button, PhotoImage, BOTTOM, W, E, Entry
 import intersections
 import get_elevations
 import overpy
 
 class TrailBlazerGUI:
+    ''' Defines the graphical user interface, which displays and allows users to interact with various modules. '''
+
     def __init__(self, master):
+        ''' Initializes the GUI. '''
         self.master = master
         self.bg = "#90EE90"
         self.fg = "#654321"
@@ -25,20 +28,20 @@ class TrailBlazerGUI:
         self.start.focus_set()
         self.start.bind("<Return>", self.login_page)
         self.greet = Label(self.start, text="Welcome to our Route Suggestion Web App!", font=("sans serif", 50),
-                            fg=self.fg, bg=self.bg, pady=10)
+                           fg=self.fg, bg=self.bg, pady=10)
         self.greet.pack()
         self.intro = Message(self.start, text="We are writing software to help generate and visualize new routes for runners, walkers, and bikers. \nWe are creating this for our Software Design final project.",
-                            font=("sans serif", 20), width=1900, justify=CENTER, fg=self.fg, bg=self.bg, pady=10)
+                             font=("sans serif", 20), width=1900, justify=CENTER, fg=self.fg, bg=self.bg, pady=10)
         self.intro.pack()
 
 
         self.buttons1 = Frame(self.start, width=500, bg=self.bg)
         self.buttons1.pack()
         self.proceed = Button(self.buttons1, text="Proceed", bg="#64e764", fg="#654321", pady=5,
-                                activebackground="#bcf5bc", activeforeground="#8b5d2e", command=self.login_page)
+                              activebackground="#bcf5bc", activeforeground="#8b5d2e", command=self.login_page)
         self.proceed.grid(row=0, column=0)
         self.cancel = Button(self.buttons1, text="Cancel", bg="#64e764", fg="#654321", pady=5,
-                                    activebackground="#bcf5bc", activeforeground="#8b5d2e", command=master.quit)
+                             activebackground="#bcf5bc", activeforeground="#8b5d2e", command=master.quit)
         self.cancel.grid(row=0, column=1)
 
         self.logo = PhotoImage(file="images/trail_blazer_logo.gif")
@@ -46,7 +49,8 @@ class TrailBlazerGUI:
         self.logo_disp.pack(side=BOTTOM)
 
     def login_page(self, event=None):
-        if self.e_page!="empty":
+        ''' Displays a page where the user can login to find a route. '''
+        if self.e_page != "empty":
             self.e_page.pack_forget()
             self.e_page.destroy()
         else:
@@ -60,7 +64,7 @@ class TrailBlazerGUI:
 
 
         self.request = Label(self.l_page, text="Please log in to continue.", font=("sans serif", 20),
-                            fg=self.fg, bg=self.bg, pady=20)
+                             fg=self.fg, bg=self.bg, pady=20)
         self.request.pack()
 
 
@@ -68,25 +72,25 @@ class TrailBlazerGUI:
         self.login.pack()
         self.login.bind("<Return>", self.valid_login)
         self.first = Label(self.login, text="First Name = ", font=("sans serif", 15), anchor=W, bg=self.bg,
-                            fg=self.fg, pady=10)
+                           fg=self.fg, pady=10)
         self.first.grid(row=0, sticky=E)
         self.first_in = Entry(self.login, font=("sans serif", 15), exportselection=0, cursor="xterm")
         self.first_in.bind("<Return>", self.valid_login)
         self.first_in.grid(row=0, column=1, columnspan=3)
         self.last = Label(self.login, text="Last Name = ", font=("sans serif", 15), anchor=W, bg=self.bg,
-                            fg=self.fg, pady=10)
+                          fg=self.fg, pady=10)
         self.last.grid(row=1, sticky=E)
         self.last_in = Entry(self.login, font=("sans serif", 15), exportselection=0, cursor="xterm")
         self.last_in.bind("<Return>", self.valid_login)
         self.last_in.grid(row=1, column=1, columnspan=3)
         self.user = Label(self.login, text="Username = ", font=("sans serif", 15), anchor=W, bg=self.bg,
-                            fg=self.fg, pady=10)
+                          fg=self.fg, pady=10)
         self.user.grid(row=2, sticky=E)
         self.user_in = Entry(self.login, font=("sans serif", 15), exportselection=0, cursor="xterm")
         self.user_in.bind("<Return>", self.valid_login)
         self.user_in.grid(row=2, column=1, columnspan=3)
         self.pss = Label(self.login, text="Password = ", font=("sans serif", 15), anchor=W, bg=self.bg,
-                            fg=self.fg, pady=10)
+                         fg=self.fg, pady=10)
         self.pss.grid(row=3, sticky=E)
         self.pss_in = Entry(self.login, font=("sans serif", 15), exportselection=0, cursor="xterm", show="*")
         self.pss_in.bind("<Return>", self.valid_login)
@@ -96,15 +100,16 @@ class TrailBlazerGUI:
         self.buttons2 = Frame(self.l_page, width=500, bg=self.bg)
         self.buttons2.pack()
         self.submit = Button(self.buttons2, text="Submit", bg="#64e764", fg="#654321", pady=5,
-                            activebackground="#bcf5bc", activeforeground="#8b5d2e", command=self.valid_login)
+                             activebackground="#bcf5bc", activeforeground="#8b5d2e", command=self.valid_login)
         self.submit.bind("<Return>", self.valid_login)
         self.submit.grid(row=0, column=0)
         self.cancel = Button(self.buttons2, text="Cancel", bg="#64e764", fg="#654321", pady=5,
-                            activebackground="#bcf5bc", activeforeground="#8b5d2e", command=self.master.quit)
+                             activebackground="#bcf5bc", activeforeground="#8b5d2e", command=self.master.quit)
         self.cancel.bind("<Return>", self.valid_login)
         self.cancel.grid(row=0, column=1)
 
     def home_page(self, event=None):
+        ''' Displays the GUI home page, where user can find the weather of a given location and request a route. '''
         first_name = self.first_in.get()
         last_name = self.last_in.get()
         self.l_page.pack_forget()
@@ -117,7 +122,7 @@ class TrailBlazerGUI:
 
 
         self.hello = Label(self.h_page, text="Hello! Welcome to your profile page!", font=("sans serif", 50),
-                            bg=self.bg, fg=self.fg, pady=20)
+                           bg=self.bg, fg=self.fg, pady=20)
         self.hello.pack()
 
 
@@ -125,7 +130,7 @@ class TrailBlazerGUI:
         self.weather_init.pack()
         self.weather_init.bind("<Return>", self.get_forecast)
         self.location = Label(self.weather_init, text="Current Location = ", font=("sans serif", 15), anchor=W, bg=self.bg,
-                            fg=self.fg, pady=10)
+                              fg=self.fg, pady=10)
         self.location.grid(row=0, sticky=E)
         self.location_in = Entry(self.weather_init, font=("sans serif", 15), exportselection=0, cursor="xterm")
         self.location_in.bind("<Return>", self.get_forecast)
@@ -136,12 +141,12 @@ class TrailBlazerGUI:
         self.buttons5.pack()
         self.buttons5.bind("<Return>", self.get_forecast)
         self.weatherby = Button(self.buttons5, text="Find Weather", bg="#64e764", fg="#654321",
-                            activebackground="#bcf5bc", activeforeground="#8b5d2e", pady=5, command=self.get_forecast)
+                                activebackground="#bcf5bc", activeforeground="#8b5d2e", pady=5, command=self.get_forecast)
         self.weatherby.grid(row=0, column=0)
 
 
         self.name_is = Label(self.h_page, text="Where would you like to go, %s %s?" % (first_name, last_name),
-                            font=("sans serif", 15), fg=self.fg, bg=self.bg, pady=10)
+                             font=("sans serif", 15), fg=self.fg, bg=self.bg, pady=10)
         self.name_is.pack()
 
 
@@ -149,34 +154,34 @@ class TrailBlazerGUI:
         self.profile.pack()
         self.profile.bind("<Return>", self.find_route)
         self.loc = Label(self.profile, text="Starting Location:", font=("sans serif", 15), anchor=W, bg=self.bg,
-                            fg=self.fg, pady=10)
+                         fg=self.fg, pady=10)
         self.loc.grid(row=0, sticky=E)
         self.lat = Label(self.profile, text="Latitiude = ", font=("sans serif", 15), anchor=W, bg=self.bg,
-                            fg=self.fg, pady=10)
+                         fg=self.fg, pady=10)
         self.lat.grid(row=1, column=0)
         self.lat_in = Entry(self.profile, font=("sans serif", 15), exportselection=0, cursor="xterm")
         self.lat_in.bind("<Return>", self.find_route)
-        self.lat_in.insert(0,"42.292922")
+        self.lat_in.insert(0, "42.292922")
         if self.profile.focus_get() == self.lat_in:
             self.lat_in.delete()
         self.lat_in.grid(row=1, column=1)
         self.lng = Label(self.profile, text="Longitude = ", font=("sans serif", 15), anchor=W, bg=self.bg,
-                            fg=self.fg, pady=10)
+                         fg=self.fg, pady=10)
         self.lng.grid(row=1, column=2)
         self.lng_in = Entry(self.profile, font=("sans serif", 15), exportselection=0, cursor="xterm")
         self.lng_in.bind("<Return>", self.find_route)
-        self.lng_in.insert(0,"-71.263073")
+        self.lng_in.insert(0, "-71.263073")
         if self.profile.focus_get() == self.lat_in:
             self.lat_in.delete()
         self.lng_in.grid(row=1, column=3)
         self.dist = Label(self.profile, text="Distance(km) = ", font=("sans serif", 15), anchor=W, bg=self.bg,
-                            fg=self.fg, pady=10)
+                          fg=self.fg, pady=10)
         self.dist.grid(row=2, sticky=E)
         self.dist_in = Entry(self.profile, font=("sans serif", 15), exportselection=0, cursor="xterm")
         self.dist_in.bind("<Return>", self.find_route)
         self.dist_in.grid(row=2, column=1)
         self.dist_max = Label(self.profile, text="Maximum distance = 2", font=("sans serif", 10), anchor=W, bg=self.bg,
-                            fg=self.fg, pady=10, padx=10)
+                              fg=self.fg, pady=10, padx=10)
         self.dist_max.grid(row=2, column=2, sticky=E)
 
 
@@ -186,13 +191,14 @@ class TrailBlazerGUI:
                             activebackground="#bcf5bc", activeforeground="#8b5d2e", pady=5, command=self.find_route)
         self.enter.grid(row=0, column=0)
         self.elev = Button(self.buttons3, text="View Elevation", bg="#64e764", fg="#654321",
-                            activebackground="#bcf5bc", activeforeground="#8b5d2e",pady=5, command=self.find_elevation)
+                           activebackground="#bcf5bc", activeforeground="#8b5d2e", pady=5, command=self.find_elevation)
         self.elev.grid(row=0, column=1)
         self.cancel = Button(self.buttons3, text="Cancel", bg="#64e764", fg="#654321",
-                            activebackground="#bcf5bc", activeforeground="#8b5d2e",pady=5, command=self.master.quit)
+                             activebackground="#bcf5bc", activeforeground="#8b5d2e", pady=5, command=self.master.quit)
         self.cancel.grid(row=0, column=2)
 
     def error(self, event=None):
+        ''' Displays an error page if a user did not provide all of the required information. '''
         self.l_page.pack_forget()
         self.l_page.destroy()
         self.e_page = Frame(self.master, height=1080, width=1920, bg=self.bg)
@@ -203,23 +209,24 @@ class TrailBlazerGUI:
 
 
         self.err_title = Label(self.e_page, text="Error: Missing Information", font=("sans serif", 50),
-                                bg=self.bg, fg=self.fg, pady=10)
+                               bg=self.bg, fg=self.fg, pady=10)
         self.err_title.pack()
         self.err_mss = Message(self.e_page, text="Your submission was missing some data. All fields are rquired.\nPlease return to fill out all fields.",
-                            font=("sans serif", 20), width=1900, justify=CENTER, fg=self.fg, bg=self.bg, pady=10)
+                               font=("sans serif", 20), width=1900, justify=CENTER, fg=self.fg, bg=self.bg, pady=10)
         self.err_mss.pack()
 
 
         self.buttons4 = Frame(self.e_page, width=500, bg=self.bg)
         self.buttons4.pack()
         self.ret = Button(self.buttons4, text="Return", bg="#64e764", fg="#654321", pady=5,
-                            activebackground="#bcf5bc", activeforeground="#8b5d2e", command=self.login_page)
+                          activebackground="#bcf5bc", activeforeground="#8b5d2e", command=self.login_page)
         self.ret.grid(row=0, column=0)
         self.cancel = Button(self.buttons4, text="Cancel", bg="#64e764", fg="#654321", pady=5,
-                            activebackground="#bcf5bc", activeforeground="#8b5d2e", command=self.master.quit)
+                             activebackground="#bcf5bc", activeforeground="#8b5d2e", command=self.master.quit)
         self.cancel.grid(row=0, column=1)
 
-    def valid_login(self,event=None):
+    def valid_login(self, event=None):
+        ''' Checks if a user provided all of the necessary information to login. '''
         firstname = self.first_in.get()
         lastname = self.last_in.get()
         username = self.user_in.get()
@@ -230,6 +237,7 @@ class TrailBlazerGUI:
             return self.home_page()
 
     def get_forecast(self, event=None):
+        ''' Gets and displays a weather forecast for a given location. '''
         from weather import Weather, Unit
         self.weather = Weather(unit=Unit.FAHRENHEIT)
         self.local = self.weather.lookup_by_location(self.location_in.get())
@@ -243,26 +251,28 @@ class TrailBlazerGUI:
         self.buttons5.destroy()
 
 
-        self.weather_1 = Label(self.weather_init, text="Today's weather will be %s and %s F" % (self.condition.text,self.condition.temp),
-                                    font=("sans serif", 17), justify=CENTER, fg=self.fg, bg=self.bg)
+        self.weather_1 = Label(self.weather_init, text="Today's weather will be %s and %s F" % (self.condition.text, self.condition.temp),
+                               font=("sans serif", 17), justify=CENTER, fg=self.fg, bg=self.bg)
         self.weather_1.pack()
         self.weather_2 = Label(self.weather_init, text="with a high of %s F and a low of %s F." % (self.forecast.high, self.forecast.low),
-                                font=("sans serif", 15), justify=CENTER, fg=self.fg, bg=self.bg)
+                               font=("sans serif", 15), justify=CENTER, fg=self.fg, bg=self.bg)
         self.weather_2.pack()
-        self.weather_3 = Label(self.weather_init, text="According to Yahoo weather on %s." % (self.condition.date),font=("sans serif", 10),
-                                justify=CENTER, fg=self.fg, bg=self.bg, pady=5)
+        self.weather_3 = Label(self.weather_init, text="According to Yahoo weather on %s." % (self.condition.date), font=("sans serif", 10),
+                               justify=CENTER, fg=self.fg, bg=self.bg, pady=5)
         self.weather_3.pack()
 
     def find_route(self, event=None):
+        ''' Finds and plots a route. '''
         api = overpy.Overpass()
         lat = float(self.lat_in.get())
         lng = float(self.lng_in.get())
         radius = 0.01
         distance = float(self.dist_in.get())
-        self.route = intersections.graph_it(api,lat,lng,radius,distance)
+        self.route = intersections.graph_it(api, lat, lng, radius, distance)
         intersections.plot_graph(self.route)
 
     def find_elevation(self, event=None):
+        ''' Finds and graphs the elevations of points along a route. '''
         distance = float(self.dist_in.get())
         route_coords = intersections.find_route_coords(self.route)
         unzipped = list(zip(*route_coords))
@@ -271,6 +281,7 @@ class TrailBlazerGUI:
     def close(self, event=None):
         self.master.quit()
 
-root = Tk()
-app_gui = TrailBlazerGUI(root)
-root.mainloop()
+if __name__ == "__main__":
+    root = Tk()
+    app_gui = TrailBlazerGUI(root)
+    root.mainloop()
