@@ -8,16 +8,16 @@ To see a demonstration of how to run our program, you can watch this video below
 # Requirements:
 Additionally, you will need to install the following modules on your system in order for the files to run:
 
-#### 1) GMPlot
-Run the following in the command line: pip install gmplot
+#### 1) Tkinter
+Run the following in the command line: pip install tkinter
 #### 2) Googlemaps
 Run the following in the command line: pip install googlemaps
 #### 3) Geopy 
 Run the following in the command line: pip install geopy
 #### 4) Geographiclib 
 Run the following in the command line: pip install geographiclib
-#### 5) Polyline 
-Run the following in the command line: pip install polyline
+#### 5) NumPy 
+Run the following in the command line: pip install numpy
 #### 6) Overpy 
 Run the following in the command line: pip install overpy
 #### 7) Weather API
