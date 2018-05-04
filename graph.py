@@ -162,8 +162,8 @@ class Graph():
             for node in edge.node_list:
                 self.lats.append(node.lat)
                 self.lons.append(node.lon)
-            self.lats.append(edge.end.lat)
-            self.lons.append(edge.end.lon)
+        self.lats.append(self.plottable_cycle[-1].end.lat)
+        self.lons.append(self.plottable_cycle[-1].end.lon)
 
     def show_route(self):
         ''' Plots a cycle in the graph that starts at a given point. '''
