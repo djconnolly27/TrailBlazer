@@ -259,19 +259,14 @@ class TrailBlazerGUI:
         lng = float(self.lng_in.get())
         radius = 0.01
         distance = float(self.dist_in.get())
-        route = intersections.graph_it(api,lat,lng,radius,distance)
-        intersections.plot_graph(route)
+        self.route = intersections.graph_it(api,lat,lng,radius,distance)
+        intersections.plot_graph(self.route)
 
     def find_elevation(self, event=None):
-        api = overpy.Overpass()
-        lat = float(self.lat_in.get())
-        lng = float(self.lng_in.get())
-        radius = 0.01
         distance = float(self.dist_in.get())
-        route = intersections.graph_it(api,lat,lng,radius,distance)
-        route_coords = intersections.find_route_coords(route)
+        route_coords = intersections.find_route_coords(self.route)
         unzipped = list(zip(*route_coords))
-        get_elevations.plot_elevation(get_elevations.get_elevation_list(lats=unzipped[0],longs=unzipped[1]),d=distance)
+        get_elevations.plot_elevation(get_elevations.get_elevation_list(unzipped[0], unzipped[1]), distance)
 
     def close(self, event=None):
         self.master.quit()
