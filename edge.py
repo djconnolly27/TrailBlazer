@@ -12,6 +12,8 @@ class Edge():
         ''' Initializes the edge with an empty list of points and a length of zero '''
         self.node_list = []
         self.length = 0
+        self.start = 0
+        self.end = 0
 
     def set_start_node(self, start_node):
         ''' Defines the first end node of an edge '''
@@ -31,7 +33,7 @@ class Edge():
 
     def update_distance(self):
         ''' Updates the length of the edge '''
-        if len(self.node_list) > 0:
+        if self.node_list:
             first_coord = (self.start.lat, self.start.lon)
             last_coord = (self.end.lat, self.end.lon)
             self.length += vincenty((self.node_list[0].lat, self.node_list[0].lon), first_coord).km
@@ -48,5 +50,4 @@ class Edge():
         bearing = Geodesic.WGS84.Inverse(self.start.lat, self.start.lon, self.end.lat, self.end.lon)['azi1']
         if bearing < 0.0:
             return bearing + 360.0
-        else:
-            return bearing
+        return bearing
