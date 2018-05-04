@@ -30,4 +30,6 @@ def plot_elevation(elevations, distance):
     x_axis = np.linspace(0, distance, num=len(elevations))
     plt.plot(x_axis, elevations, color='g')
     plt.fill_between(x_axis, elevations, 0, alpha=0.5, color='g')
+    plt.xlabel('Distance (km)')
+    plt.ylabel('Elevation (m)')
     plt.show()
