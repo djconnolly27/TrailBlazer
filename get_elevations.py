@@ -32,4 +32,4 @@ def plot_elevation(elevations, distance):
     plt.fill_between(x_axis, elevations, 0, alpha=0.5, color='g')
     plt.xlabel('Distance (km)')
     plt.ylabel('Elevation (m)')
-    plt.show()
+    return plt.show()
