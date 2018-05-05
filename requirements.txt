@@ -1,0 +1,10 @@
+geographiclib==1.49
+geoplotlib==0.3.2
+geopy==1.12.0
+google-api-python-client==1.6.5
+googlemaps==2.5.1
+matplotlib==2.1.2
+mplleaflet==0.0.5
+numpy==1.14.1
+overpass==0.6.0
+overpy==0.4
