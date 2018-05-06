@@ -129,10 +129,12 @@
   max-width: 1000px;
   padding: 20px 10px;
   margin: 0 auto;
+  z-index: -1
 }
 .sidenav {
   position: fixed;
   top: 190px;
   left: 0;
-  padding-top: 20px
+  padding-top: 20px;
+  z-index: 0;
 }
