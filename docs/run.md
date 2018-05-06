@@ -4,7 +4,7 @@ In order to run Trail Blazer on a Linux system, you will need to clone our githu
 
 To see a demonstration of how to run our program, you can watch this video below.
 
-![alt text](../images/TrailBlazer_Video.mp4)
+[![alt text](../images/trail_blazer_logo.png)](https://youtu.be/adxtBm0NRZ4)
 
 # Requirements:
 Additionally, you will need to install the following modules on your system in order for the files to run:
