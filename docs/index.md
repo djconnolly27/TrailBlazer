@@ -30,8 +30,7 @@ Like most aspects of Trail Blazer, the team did not set out expecting to make a 
 #### Additional Features
 In order to create the best product for our customer, we asked our stakeholders questions about what information they would like to have before they go for a run. We then parsed their responses and turned it into features of our app like displaying the weather and plotting the elevation throughout the path. Adding these components help to create the best experience for our users. 
 
-![alt text](images/Elevation.png | width=100)
-![alt text](images/Weather.png | width=100)
+![alt text](images/features.png)
 
 ## The Team
 Trail Blazer was developed by three first year students at Olin College of Engineering as a final project for their Software Design course during the spring of 2018. Read more about the team [here](team.md).
