@@ -57,5 +57,5 @@ Our code is broken up into several different files at the moment, including inte
 
 To access the web app you can run weather_app.py and click the link to the web app that it returns. The other files are linked throughout the web app by submitting forms. 
 
-![alt text](TrailBlazer/images/TrailblazerPoster-1.jpg "Trail Blazer Poster")
+![alt text](images/TrailblazerPoster-1.jpg "Trail Blazer Poster")
 
