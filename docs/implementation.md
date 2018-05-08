@@ -16,7 +16,11 @@ In contrast, in denser areas such as cities like Boston, Trail Blazer has diffic
 #### Quickness
 The size of the graph is the most important factor in determining the speed with which Trail Blazer runs. Over several runs looking for paths of varying lengths, the program is able to find runs that differ greatly in length in nearly equal amounts of time. Nevertheless, it slows to a halt as it continues its depth-first search through highly complex, interconnected, and large graphs. Additionally, however, when performing benchmark tests on Trail Blazer in areas where the program had previously found paths, we have found that the query for OpenStreetMap data and the construction of the graph itself were the most time consuming processes. Once we had built the graph, we could quickly find multiple cycles of varying lengths. As a result, we hope to incorporate a feature that caches data locally, as most potential users are likely to use the program in the same geographic area repeatedly. By storing the query data and the graph itself, Trail Blazer's run time would be almost entirely dedicated to running the cycle-search algorithm.
 
-![alt text](images/Route_Finding_Visual.svg)
+<figure>
+  <img src="{{https://github.com/draconian9908/TrailBlazer}}/docs/images/Route_Finding_Visual.svg" alt="my alt text"/>
+  <figcaption>Above is a more visual representation of how Trail Blazer finds routes.</figcaption>
+</figure>
+
 
 #### Potential Algorithm Improvements
 1. Attempt a breadth-first search for cycles in the graph. Though the team behind Trail Blazer attempted to implement such an algorithm, they were ultimately unable to complete such an implementation and chose to stick with a depth-first search instead.
