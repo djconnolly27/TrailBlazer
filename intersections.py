@@ -6,12 +6,19 @@ Intersections.py takes starting coordinates and a distance and finds and plots a
 from geopy.distance import vincenty
 from graph import Graph
 
-def get_nearest_node(api, lat, lng):
+def get_nearest_node(api, lat, lng, radial_distance):
     ''' Finds and returns the node nearest to a given set of lat-lng coordinates. '''
-    small_graph = Graph(api, lat, lng, 0.0015)
+    small_graph = Graph(api, lat, lng, radial_distance)
     small_graph.get_ways_in_area()
     small_graph.get_vertices()
     small_graph.get_intersections()
+    while not small_graph.intersections:
+        #If no nodes are found, increase the search area.
+        radial_distance = radial_distance + 0.001
+        small_graph = Graph(api, lat, lng, radial_distance)
+        small_graph.get_ways_in_area()
+        small_graph.get_vertices()
+        small_graph.get_intersections()
 
     position = (lat, lng)
     first_try = (small_graph.intersections[0].lat, small_graph.intersections[0].lon)
@@ -26,7 +33,8 @@ def get_nearest_node(api, lat, lng):
 
 def graph_it(api, lat, lng, radius, distance):
     ''' Finds and graphs a cycle of a given length starting from near a given lat-lng point. '''
-    start = get_nearest_node(api, lat, lng)
+    start = get_nearest_node(api, lat, lng, 0.005)
+    #Using 0.005 creates minimizes the nodes that need to be searched to find the nearest.
     full_graph = Graph(api, lat, lng, radius)
     full_graph.get_route_coords(distance, start)
     return full_graph
