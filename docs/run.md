@@ -4,7 +4,7 @@ In order to run Trail Blazer on a Linux system, you will need to clone our githu
 
 To see a demonstration of how to run our program, you can watch this video below.
 
-[![alt text](https://img.youtube.com/vi/adxtBm0NRZ4/0.jpg)](https://youtu.be/adxtBm0NRZ4)
+[![alt text](https://img.youtube.com/vi/1n9clOBuS2o/0.jpg)](https://youtu.be/1n9clOBuS2o)
 
 ## Requirements
 Additionally, you will need to install several modules in order to run the program. The majority of these can be installed with the following command: `pip install -r requirements.txt`
