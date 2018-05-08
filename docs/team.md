@@ -1,5 +1,5 @@
 # The Team
-Trail Blazer was developed by three first year engineering students at Olin College of Engineering as a final project for their Software Design course during the spring of 2018.
+Trail Blazer was developed by three first year students at Olin College of Engineering as a final project for their Software Design course during the spring of 2018.
 
 ### Daniel Connolly
 
