@@ -27,7 +27,7 @@ class TrailBlazerGUI:
         self.start.pack()
         self.start.focus_set()
         self.start.bind("<Return>", self.login_page)
-        self.greet = Label(self.start, text="Welcome to our Route Suggestion Web App!", font=("sans serif", 50),
+        self.greet = Label(self.start, text="Welcome to our Route Suggestion GUI!", font=("sans serif", 50),
                            fg=self.fg, bg=self.bg, pady=10)
         self.greet.pack()
         self.intro = Message(self.start, text="We are writing software to help generate and visualize new routes for runners, walkers, and bikers. \nWe are creating this for our Software Design final project.",
@@ -189,9 +189,11 @@ class TrailBlazerGUI:
         self.buttons3.pack()
         self.enter = Button(self.buttons3, text="Find Route", bg="#64e764", fg="#654321",
                             activebackground="#bcf5bc", activeforeground="#8b5d2e", pady=5, command=self.find_route)
+        self.enter.bind("<Return>", self.find_route)
         self.enter.grid(row=0, column=0)
         self.elev = Button(self.buttons3, text="View Elevation", bg="#64e764", fg="#654321",
                            activebackground="#bcf5bc", activeforeground="#8b5d2e", pady=5, command=self.find_elevation)
+        self.elev.bind("<Return>", self.find_elevation)
         self.elev.grid(row=0, column=1)
         self.cancel = Button(self.buttons3, text="Cancel", bg="#64e764", fg="#654321",
                              activebackground="#bcf5bc", activeforeground="#8b5d2e", pady=5, command=self.master.quit)

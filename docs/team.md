@@ -1,4 +1,5 @@
 # The Team
+Trail Blazer was developed by three first year students at Olin College of Engineering as a final project for their Software Design course during the spring of 2018.
 
 ### Daniel Connolly
 
@@ -15,3 +16,6 @@ Lydia is a first year student in Bio Engineering at Olin College of Engineering.
 ![alt text](images/small_profile.jpg)
 
 Raquel is a first year student in Engineering with a concentration in Design at Olin College of Engineering. She is also interested in community building and entrepreneurship and plans to start her own start up this summer. 
+
+#### Contact Us
+If you have any questions or concerns regarding Trail Blazer, please feel free reach out to us at <a href="trail.blazer.routes@gmail.com">trail.blazer.routes@gmail.com</a>.
