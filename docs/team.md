@@ -18,4 +18,4 @@ Lydia is a first year student in Bio Engineering at Olin College of Engineering.
 Raquel is a first year student in Engineering with a concentration in Design at Olin College of Engineering. She is also interested in community building and entrepreneurship and plans to start her own start up this summer. 
 
 #### Contact Us
-If you have any questions or concerns regarding Trail Blazer, please reach out to us at <a href="trail.blazer.routes@gmail.com">trail.blazer.routes@gmail.com</a>.
+If you have any questions or concerns regarding Trail Blazer, please feel free reach out to us at <a href="trail.blazer.routes@gmail.com">trail.blazer.routes@gmail.com</a>.
